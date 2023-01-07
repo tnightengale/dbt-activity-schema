@@ -1,34 +1,35 @@
 {% macro dataset(
     activity_stream_ref,
-    occurance,
     primary_activity,
-    additional_activities=[]
+    appended_activities=[]
 ) %} {{ return(adapter.dispatch("dataset", "dbt_activity_schema")(
     activity_stream_ref,
-    occurance,
     primary_activity,
-    additional_activities
+    appended_activities
 )) }} {% endmacro %}
 
 {% macro default__dataset(
     activity_stream_ref,
-    occurance,
     primary_activity,
-    additional_activities
+    appended_activities
 ) %}
 
-{% set occurance_clause = dbt_activity_schema.get_occurance_clause(occurance) %}
 {% set columns = dbt_activity_schema.columns() %}
-
+{% set stream = dbt_activity_schema.globals().stream %}
 
 select
-    {{ columns.customer }},
     {{ columns.activity_id }},
+    {{ columns.customer }},
     {{ columns.ts }},
 
-    {% for r, a in additional_activities %}
-    {{ dbt_activity_schema.relationship("agg", r, loop.index) }}(stream_{{ loop.index }}.{{ columns.ts }})
-        as {{ r -}}_{{- a | replace(" ", "_") -}}_{{- columns.ts }} {% if not loop.last %},{% endif %}
+    {% for activity in appended_activities %}
+
+    {{ activity.relationship.aggregation_func }}(
+        stream_{{ loop.index }}_{{ columns.ts }}
+    ) as {{ activity.relationship.name -}}_{{- activity.name | replace(" ", "_") -}}_{{- columns.ts -}} 
+    
+        {%- if not loop.last -%},{% endif %}
+
     {% endfor %}
 
 from (
@@ -37,25 +38,31 @@ from (
         stream.{{- columns.activity_id }},
         stream.{{- columns.ts }},
 
-        {% for _, _ in additional_activities %}
-        stream_{{ loop.index }}.{{ columns.ts }} {% if not loop.last %},{% endif %}
+        {% for _ in appended_activities %}
+
+        stream_{{ loop.index }}.{{ columns.ts }} as stream_{{ loop.index }}_{{ columns.ts -}} 
+        
+            {%- if not loop.last -%},{% endif %}
+        
         {% endfor %}
 
     from {{ activity_stream_ref }} as stream
 
-    {% for r, _ in additional_activities %}
+    {% for activity in appended_activities %}
     {% set i = loop.index %}
-    inner join {{ activity_stream_ref }} as stream_{{- i }}
+    left join {{ activity_stream_ref }} as stream_{{- i }}
         on (
             stream_{{ i -}}.{{- columns.customer }} = stream.{{- columns.customer }}
-            and {{ dbt_activity_schema.relationship("join", r, i) }}
+            {# and {{ relationship("join", r, i) }} #}
+            and {{ activity.relationship.join_clause(i) }}
         )
     {% endfor %}
 
-    where stream.{{- columns.activity }} = '{{ primary_activity }}'
+    where stream.{{- columns.activity }} = '{{ primary_activity.name }}'
+        and {{ primary_activity.where_clause }}
 
-        {% for _, append_activity in additional_activities %}
-        and stream_{{ loop.index }}.{{- columns.activity }} = '{{ append_activity }}'
+        {% for activity in appended_activities %}
+        and stream_{{ loop.index }}.{{- columns.activity }} = '{{ activity.name }}'
         {% endfor %}
 )
 group by

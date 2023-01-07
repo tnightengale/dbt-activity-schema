@@ -1,20 +1,15 @@
-{% macro first_ever(option, i) %}
-
-{% set aggregation -%}
-min
-{%- endset %}
-
-{% set join_clause -%}
+{% macro first_ever_join_clause(i) %}
 (
     stream_{{ i }}.{{ dbt_activity_schema.columns().activity_occurrence }} = 1
 )
-{%- endset %}
+{% endmacro %}
 
-{% set agg_or_join_mapping = dict(
-    agg=aggregation,
-    join=join_clause
-) %}
+{% macro first_ever() %}
 
-{% do return(agg_or_join_mapping[option]) %}
+{% do return(namespace(
+    name="first_ever",
+    aggregation_func="min",
+    join_clause=dbt_activity_schema.first_ever_join_clause
+)) %}
 
 {% endmacro %}

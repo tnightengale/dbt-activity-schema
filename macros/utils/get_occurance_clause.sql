@@ -9,6 +9,7 @@
             occurance: str | int
             One of 'All', 'Last', or an Integer representing the Nth activty to fetch.
     #}
+    
     {% set occurance = occurance | int %}
 
     {% set occurance_clause %}

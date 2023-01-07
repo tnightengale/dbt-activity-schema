@@ -1,1 +1,8 @@
-integration_tests
+target/
+dbt_modules/
+logs/
+.env
+.user.yml
+.vscode
+.dbt_env
+.venv
