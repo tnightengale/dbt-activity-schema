@@ -16,58 +16,91 @@
 
 {% set columns = dbt_activity_schema.columns() %}
 {% set stream = dbt_activity_schema.globals().stream %}
+{% set alias = dbt_activity_schema.alias %}
 
-select
-    {{ columns.activity_id }},
-    {{ columns.customer }},
-    {{ columns.ts }},
+with 
 
-    {% for activity in appended_activities %}
-
-    {{ activity.relationship.aggregation_func }}(
-        stream_{{ loop.index }}_{{ columns.ts }}
-    ) as {{ activity.relationship.name -}}_{{- activity.name | replace(" ", "_") -}}_{{- columns.ts -}} 
-    
-        {%- if not loop.last -%},{% endif %}
-
-    {% endfor %}
-
-from (
+join_appended_activities as (
     select
-        stream.{{- columns.customer }},
         stream.{{- columns.activity_id }},
+        stream.{{- columns.customer }},
         stream.{{- columns.ts }},
+        stream.{{- columns.activity }},
+        stream.{{- columns.activity }},
+        stream.{{- columns.anonymous_customer_id }},
+        stream.{{- columns.feature_json }},
+        stream.{{- columns.revenue_impact }},
+        stream.{{- columns.link }},
+        stream.{{- columns.activity_occurrence }},
+        stream.{{- columns.activity_repeated_at }},
 
-        {% for _ in appended_activities %}
+        {% for activity in appended_activities %}{% set i = loop.index %}
 
-        stream_{{ loop.index }}.{{ columns.ts }} as stream_{{ loop.index }}_{{ columns.ts -}} 
-        
-            {%- if not loop.last -%},{% endif %}
-        
-        {% endfor %}
+            stream_{{ i }}.{{ columns.ts }} as {{ alias(activity, columns.ts)}},
+            stream_{{ i }}.{{ columns.feature_json }} as {{ alias(activity, columns.feature_json)}}
+            
+        {%- if not loop.last -%},{% endif %}{% endfor %}
 
     from {{ activity_stream_ref }} as stream
 
-    {% for activity in appended_activities %}
-    {% set i = loop.index %}
-    left join {{ activity_stream_ref }} as stream_{{- i }}
-        on (
-            stream_{{ i -}}.{{- columns.customer }} = stream.{{- columns.customer }}
-            {# and {{ relationship("join", r, i) }} #}
-            and {{ activity.relationship.join_clause(i) }}
-        )
+    {% for activity in appended_activities %}{% set i = loop.index %}
+
+        left join {{ activity_stream_ref }} as stream_{{ i }}
+            on (
+                stream_{{ i }}.{{ columns.customer }} = stream.{{ columns.customer }}
+                and {{ activity.relationship.join_clause(i) }}
+            )
     {% endfor %}
 
-    where stream.{{- columns.activity }} = '{{ primary_activity.name }}'
+    where stream.{{ columns.activity }} = '{{ primary_activity.name }}'
         and {{ primary_activity.where_clause }}
 
         {% for activity in appended_activities %}
-        and stream_{{ loop.index }}.{{- columns.activity }} = '{{ activity.name }}'
+            and stream_{{ loop.index }}.{{ columns.activity }} = '{{ activity.name }}'
         {% endfor %}
+),
+
+aggregate_appended_activities as (
+    select
+        {{ columns.activity_id }},
+        {{ columns.customer }},
+        {{ columns.ts }},
+        {{ columns.activity }},
+        {{ columns.activity }},
+        {{ columns.anonymous_customer_id }},
+        {{ columns.feature_json }},
+        {{ columns.revenue_impact }},
+        {{ columns.link }},
+        {{ columns.activity_occurrence }},
+        {{ columns.activity_repeated_at }},
+
+        {% for activity in appended_activities %}{% set i = loop.index %}
+
+        min(
+            {{- alias(activity, columns.feature_json) -}}
+        ) as {{- alias(activity, columns.feature_json) -}},
+
+        {{ activity.relationship.aggregation_func }}(
+            {{- alias(activity, columns.ts) -}}
+        ) as {{ alias(activity, columns.ts) }}
+
+        {%- if not loop.last -%},{% endif %}{% endfor %}
+
+    from join_appended_activities
+    group by
+        {{ columns.activity_id }},
+        {{ columns.customer }},
+        {{ columns.ts }},
+        {{ columns.activity }},
+        {{ columns.activity }},
+        {{ columns.anonymous_customer_id }},
+        {{ columns.feature_json }},
+        {{ columns.revenue_impact }},
+        {{ columns.link }},
+        {{ columns.activity_occurrence }},
+        {{ columns.activity_repeated_at }}
 )
-group by
-    {{ columns.customer }},
-    {{ columns.activity_id }},
-    {{ columns.ts }}
+
+select * from aggregate_appended_activities
 
 {% endmacro %}
