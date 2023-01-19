@@ -13,21 +13,18 @@ activity_name: str
     The string identifier of the activity in the stream to append (join).
 #}
 
-{% set occurance = occurance | int %}
-
 {% set where_clause %}
+
 {%- if occurance == "All" -%}
     (true)
 {%- elif occurance == "Last" -%}
     ({{ dbt_activity_schema.columns().activity_repeated_at }} is null)
-{%- else -%}
-    {# Ensure an integer was passed #}
-    {%- if occurance is odd or occurance is even -%}
+{%- elif occurance is odd or occurance is even -%} {# Check if an integer was passed #}
     (stream.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ occurance }})
-    {% else %}
+{% else %}
     {{ exceptions.raise_compiler_error("Invalid `occurance`. Expect 'All', 'Last' or INT. Got: " ~ occurance) }}
-    {% endif %}
 {% endif %}
+
 {% endset %}
 
 {% do return(namespace(

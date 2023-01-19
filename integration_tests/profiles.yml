@@ -5,33 +5,6 @@ config:
 integration_tests:
   target: snowflake
   outputs:
-  #   postgres:
-  #     type: postgres
-  #     host: localhost
-  #     user: "{{ env_var('CI_DBT_USER') }}"
-  #     pass: "{{ env_var('CI_DBT_PASS') }}"
-  #     port: "{{ env_var('CI_DBT_PORT') }}"
-  #     dbname: "{{ env_var('CI_DBT_DBNAME') }}"
-  #     schema: dbt_expectations_integration_tests
-  #     threads: 1
-
-  #   redshift:
-  #     type: redshift
-  #     host: "{{ env_var('CI_REDSHIFT_DBT_HOST') }}"
-  #     user: "{{ env_var('CI_REDSHIFT_DBT_USER') }}"
-  #     pass: "{{ env_var('CI_REDSHIFT_DBT_PASS') }}"
-  #     dbname: "{{ env_var('CI_REDSHIFT_DBT_DBNAME') }}"
-  #     port: 5439
-  #     schema: dbt_expectations_integration_tests
-  #     threads: 1
-
-  #   bigquery:
-  #     type: bigquery
-  #     method: service-account
-  #     keyfile: "{{ env_var('GCLOUD_SERVICE_KEY_PATH') }}"
-  #     project: 'dbt-integration-tests'
-  #     schema: dbt_expectations_integration_tests
-  #     threads: 1
 
     snowflake:
       type: snowflake
@@ -41,5 +14,5 @@ integration_tests:
       role: "{{ env_var('CI_SNOWFLAKE_DBT_ROLE') }}"
       database: "{{ env_var('CI_SNOWFLAKE_DBT_DATABASE') }}"
       warehouse: "{{ env_var('CI_SNOWFLAKE_DBT_WAREHOUSE') }}"
-      schema: public
+      schema: dbt_activity_schema_integration_tests
       threads: 1

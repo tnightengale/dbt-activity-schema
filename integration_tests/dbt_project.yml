@@ -16,7 +16,6 @@ target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
 models:
-  +schema: dbt_activity_schema
   +materialized: table
 
 vars:
