@@ -30,6 +30,7 @@ aggregate_all_ever = aggregate_all_ever() #}
 
 {% set relationship_factory = dict(
     first_ever = dbt_activity_schema.first_ever(),
+    last_ever = dbt_activity_schema.last_ever(),
     first_in_between = dbt_activity_schema.first_in_between()
 ) %}
 

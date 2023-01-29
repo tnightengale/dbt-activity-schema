@@ -20,3 +20,8 @@ models:
 
 vars:
   running_intergration_tests: true
+
+seeds:
+  dbt_activity_schema_integration_tests:
+    +column_types:
+      ACTIVITY_REPEATED_AT: TIMESTAMP

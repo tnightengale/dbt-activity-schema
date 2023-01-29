@@ -1,0 +1,10 @@
+ACTIVITY_ID,CUSTOMER,TS,ACTIVITY,ANONYMOUS_CUSTOMER_ID,FEATURE_JSON,REVENUE_IMPACT,LINK,ACTIVITY_OCCURRENCE,ACTIVITY_REPEATED_AT,LAST_EVER_BOUGHT_SOMETHING_FEATURE_JSON,LAST_EVER_BOUGHT_SOMETHING_TS
+41,13,2022-02-09 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-11 22:10:11.000
+47,19,2022-02-15 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-17 22:10:11.000
+50,22,2022-02-18 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-20 22:10:11.000
+44,16,2022-02-12 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-14 22:10:11.000
+53,25,2022-02-21 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-23 22:10:11.000
+29,1,2022-01-28 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-01-30 22:10:11.000
+38,10,2022-02-06 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-08 22:10:11.000
+32,4,2022-01-31 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-02 22:10:11.000
+35,7,2022-02-03 22:10:11.000,visited page,,[{""visited page"": 1}],0,,2,,[{""bought something"": 1}],2022-02-05 22:10:11.000

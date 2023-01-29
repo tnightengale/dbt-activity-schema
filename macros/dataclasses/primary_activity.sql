@@ -15,10 +15,10 @@ activity_name: str
 
 {% set where_clause %}
 
-{%- if occurance == "All" -%}
+{%- if occurance | lower == "all" -%}
     (true)
-{%- elif occurance == "Last" -%}
-    ({{ dbt_activity_schema.columns().activity_repeated_at }} is null)
+{%- elif occurance | lower == "last" -%}
+    (stream.{{ dbt_activity_schema.columns().activity_repeated_at }} is null)
 {%- elif occurance is odd or occurance is even -%} {# Check if an integer was passed #}
     (stream.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ occurance }})
 {% else %}
