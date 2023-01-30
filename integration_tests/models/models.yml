@@ -11,3 +11,8 @@ models:
     tests:
       - dbt_utils.equality:
           compare_model: ref("output__last_ever")
+
+  - name: dataset__first_before
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref("output__first_before")

@@ -1,0 +1,19 @@
+ACTIVITY_ID,CUSTOMER,TS,ACTIVITY,ANONYMOUS_CUSTOMER_ID,FEATURE_JSON,REVENUE_IMPACT,LINK,ACTIVITY_OCCURRENCE,ACTIVITY_REPEATED_AT,FIRST_BEFORE_VISITED_PAGE_FEATURE_JSON,FIRST_BEFORE_VISITED_PAGE_TS
+22,19,2022-01-21 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-17 22:10:11.000,[{""visited page"": 1}],2022-01-19 22:10:11.000
+28,25,2022-01-27 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-23 22:10:11.000,[{""visited page"": 1}],2022-01-25 22:10:11.000
+31,1,2022-01-30 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-01 22:10:11.000
+34,4,2022-02-02 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-04 22:10:11.000
+55,25,2022-02-23 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-25 22:10:11.000
+19,16,2022-01-18 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-14 22:10:11.000,[{""visited page"": 1}],2022-01-16 22:10:11.000
+25,22,2022-01-24 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-20 22:10:11.000,[{""visited page"": 1}],2022-01-22 22:10:11.000
+52,22,2022-02-20 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-22 22:10:11.000
+13,10,2022-01-12 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-08 22:10:11.000,[{""visited page"": 1}],2022-01-10 22:10:11.000
+10,7,2022-01-09 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-05 22:10:11.000,[{""visited page"": 1}],2022-01-07 22:10:11.000
+37,7,2022-02-05 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-07 22:10:11.000
+46,16,2022-02-14 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-16 22:10:11.000
+7,4,2022-01-06 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-02 22:10:11.000,[{""visited page"": 1}],2022-01-04 22:10:11.000
+40,10,2022-02-08 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-10 22:10:11.000
+4,1,2022-01-03 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-01-30 22:10:11.000,[{""visited page"": 1}],2022-01-01 22:10:11.000
+16,13,2022-01-15 22:10:11.000,bought something,,[{""bought something"": 1}],100,,1,2022-02-11 22:10:11.000,[{""visited page"": 1}],2022-01-13 22:10:11.000
+43,13,2022-02-11 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-13 22:10:11.000
+49,19,2022-02-17 22:10:11.000,bought something,,[{""bought something"": 1}],100,,2,,[{""visited page"": 1}],2022-01-19 22:10:11.000
