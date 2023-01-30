@@ -29,9 +29,10 @@ aggregate_in_between = aggregate_in_between()
 aggregate_all_ever = aggregate_all_ever() #}
 
 {% set relationship_factory = dict(
-    first_ever = dbt_activity_schema.first_ever(),
-    last_ever = dbt_activity_schema.last_ever(),
     first_before = dbt_activity_schema.first_before(),
+    first_ever = dbt_activity_schema.first_ever(),
+    last_before = dbt_activity_schema.last_before(),
+    last_ever = dbt_activity_schema.last_ever(),
     first_in_between = dbt_activity_schema.first_in_between()
 ) %}
 
