@@ -14,6 +14,22 @@
     appended_activities
 ) %}
 
+{# Create a derived dataset using self-joins from an activity stream model.
+    
+params:
+
+    activity_stream_ref: ref()
+        The dbt ref() that points to the activty stream table. Use the project
+        variables in ./dataclasses/columns.sql to set the columns of the activity
+        stream.
+
+    primary_activity: primary_activity (dataclass)
+        The primary activity of the derived dataset.
+            
+    appended_activities: List[append_activity (dataclass)]
+        The list of appended activities to self-join to the primary activity.
+#}
+
 {% set columns = dbt_activity_schema.columns() %}
 {% set stream = dbt_activity_schema.globals().stream %}
 {% set alias = dbt_activity_schema.alias %}

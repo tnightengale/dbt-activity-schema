@@ -4,29 +4,24 @@
 
 {% macro default__append_activity(relationship_name, activity_name) %}
 
-{# params
+{# An activity to append to the `primary_activity`.
 
-relationship_name: str (enum)
-    The string identifier of the defined activity relationship, one of;
-        1. "first_ever"
-        2. "last_ever"
-        3. "first_before"
-        4. "last_before"
-        5. "first_after"
-        6. "last_after"
-        7. "aggregate_after"
-        8. "aggregate_all_ever"
-        
-activity_name: str
-    The string identifier of the activity in the stream to append (join).
+params:
+
+    relationship_name: str (enum)
+        The string identifier of the defined activity relationship, one of;
+            1. "first_ever"
+            2. "last_ever"
+            3. "first_before"
+            4. "last_before"
+            5. "first_after"
+            6. "last_after"
+            7. "aggregate_after"
+            8. "aggregate_all_ever"
+            
+    activity_name: str
+        The string identifier of the activity in the stream to append (join).
 #}
-{# last_ever = last_ever()
-first_before = first_before()
-last_before = last_before()
-first_after = first_after()
-last_after = last_after()
-aggregate_after = aggregate_after()
-aggregate_all_ever = aggregate_all_ever() #}
 
 {% set relationship_factory = dict(
     first_before = dbt_activity_schema.first_before(),
