@@ -1,5 +1,3 @@
 #!/bin/sh
 
-dbt seed --full-refresh
-dbt run
-dbt test
+dbt build -x

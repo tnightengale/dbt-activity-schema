@@ -47,16 +47,13 @@ join_appended_activities as (
         left join {{ activity_stream_ref }} as stream_{{ i }}
             on (
                 stream_{{ i }}.{{ columns.customer }} = stream.{{ columns.customer }}
+                and stream_{{ i -}}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
                 and {{ activity.relationship.join_clause(i) }}
             )
     {% endfor %}
 
     where stream.{{ columns.activity }} = '{{ primary_activity.name }}'
         and {{ primary_activity.where_clause }}
-
-        {% for activity in appended_activities %}
-            and stream_{{ loop.index }}.{{ columns.activity }} = '{{ activity.name }}'
-        {% endfor %}
 ),
 
 aggregate_appended_activities as (

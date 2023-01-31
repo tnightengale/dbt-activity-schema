@@ -2,22 +2,37 @@ version: 2
 
 models:
 
-  - name: dataset__first_ever
+  - name: dataset__first_after_1
     tests:
       - dbt_utils.equality:
-          compare_model: ref("output__first_ever")
+          compare_model: ref("output__first_after_1")
 
-  - name: dataset__last_ever
+  - name: dataset__first_after_2
     tests:
       - dbt_utils.equality:
-          compare_model: ref("output__last_ever")
+          compare_model: ref("output__first_after_2")
 
   - name: dataset__first_before
     tests:
       - dbt_utils.equality:
           compare_model: ref("output__first_before")
 
+  - name: dataset__first_ever
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref("output__first_ever")
+
+  - name: dataset__last_after_1
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref("output__last_after_1")
+
   - name: dataset__last_before
     tests:
       - dbt_utils.equality:
           compare_model: ref("output__last_before")
+          
+  - name: dataset__last_ever
+    tests:
+      - dbt_utils.equality:
+          compare_model: ref("output__last_ever")

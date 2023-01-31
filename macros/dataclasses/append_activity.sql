@@ -12,9 +12,9 @@ relationship_name: str (enum)
         2. "last_ever"
         3. "first_before"
         4. "last_before"
-        5. "first_in_between"
-        6. "last_in_between"
-        7. "aggregate_in_between"
+        5. "first_after"
+        6. "last_after"
+        7. "aggregate_after"
         8. "aggregate_all_ever"
         
 activity_name: str
@@ -23,9 +23,9 @@ activity_name: str
 {# last_ever = last_ever()
 first_before = first_before()
 last_before = last_before()
-first_in_between = first_in_between()
-last_in_between = last_in_between()
-aggregate_in_between = aggregate_in_between()
+first_after = first_after()
+last_after = last_after()
+aggregate_after = aggregate_after()
 aggregate_all_ever = aggregate_all_ever() #}
 
 {% set relationship_factory = dict(
@@ -33,7 +33,8 @@ aggregate_all_ever = aggregate_all_ever() #}
     first_ever = dbt_activity_schema.first_ever(),
     last_before = dbt_activity_schema.last_before(),
     last_ever = dbt_activity_schema.last_ever(),
-    first_in_between = dbt_activity_schema.first_in_between()
+    first_after = dbt_activity_schema.first_after(),
+    last_after = dbt_activity_schema.last_after()
 ) %}
 
 {% do return(namespace(

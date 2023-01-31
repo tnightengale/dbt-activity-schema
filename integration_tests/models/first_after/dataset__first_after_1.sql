@@ -1,9 +1,9 @@
 {{
     dbt_activity_schema.dataset(
-        ref("example__activity_stream"),
+        ref("input__first_after"),
         dbt_activity_schema.primary_activity("All","signed up"),
         [
-            dbt_activity_schema.append_activity("first_in_between", "bought something")
+            dbt_activity_schema.append_activity("first_after", "bought something")
         ]
     )
 }}
