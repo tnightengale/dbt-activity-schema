@@ -15,7 +15,7 @@
 ) %}
 
 {# Create a derived dataset using self-joins from an activity stream model.
-    
+
 params:
 
     activity_stream_ref: ref()
@@ -25,7 +25,7 @@ params:
 
     primary_activity: primary_activity (dataclass)
         The primary activity of the derived dataset.
-            
+
     appended_activities: List[append_activity (dataclass)]
         The list of appended activities to self-join to the primary activity.
 #}
@@ -34,38 +34,33 @@ params:
 {% set stream = dbt_activity_schema.globals().stream %}
 {% set alias = dbt_activity_schema.alias %}
 
-with 
+with
 
 join_appended_activities as (
     select
-        stream.{{- columns.activity_id }},
-        stream.{{- columns.customer }},
-        stream.{{- columns.ts }},
-        stream.{{- columns.activity }},
-        stream.{{- columns.anonymous_customer_id }},
-        stream.{{- columns.feature_json }},
-        stream.{{- columns.revenue_impact }},
-        stream.{{- columns.link }},
-        stream.{{- columns.activity_occurrence }},
-        stream.{{- columns.activity_repeated_at }},
+        {% for col in columns.primary_activity %}
+        stream.{{- col }},
+        {% endfor %}
 
-        {% for activity in appended_activities %}{% set i = loop.index %}
+        {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
+            {% for col in columns.appended_activities %}
 
-            stream_{{ i }}.{{ columns.ts }} as {{ alias(activity, columns.ts)}},
-            stream_{{ i }}.{{ columns.feature_json }} as {{ alias(activity, columns.feature_json)}}
-            
-        {%- if not loop.last -%},{% endif %}{% endfor %}
+        stream_{{ i }}.{{ col.name }} as {{ alias(activity, col.name)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
+
+            {% endfor %}
+        {% endfor %}
 
     from {{ activity_stream_ref }} as stream
 
     {% for activity in appended_activities %}{% set i = loop.index %}
 
-        left join {{ activity_stream_ref }} as stream_{{ i }}
-            on (
-                stream_{{ i }}.{{ columns.customer }} = stream.{{ columns.customer }}
-                and stream_{{ i -}}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
-                and {{ activity.relationship.join_clause(i) }}
-            )
+    left join {{ activity_stream_ref }} as stream_{{ i }}
+        on (
+            stream_{{ i }}.{{ columns.customer }} = stream.{{ columns.customer }}
+            and stream_{{ i -}}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
+            and {{ activity.relationship.join_clause(i) }}
+        )
+
     {% endfor %}
 
     where stream.{{ columns.activity }} = '{{ primary_activity.name }}'
@@ -74,43 +69,27 @@ join_appended_activities as (
 
 aggregate_appended_activities as (
     select
-        {{ columns.activity_id }},
-        {{ columns.customer }},
-        {{ columns.ts }},
-        {{ columns.activity }},
-        {{ columns.anonymous_customer_id }},
-        {{ columns.feature_json }},
-        {{ columns.revenue_impact }},
-        {{ columns.link }},
-        {{ columns.activity_occurrence }},
-        {{ columns.activity_repeated_at }},
+        {% for col in columns.primary_activity %}
+        {{- col }},
+        {% endfor %}
 
-        {% for activity in appended_activities %}{% set i = loop.index %}
-
-        min(
-            {{- alias(activity, columns.feature_json) -}}
-        ) as {{- alias(activity, columns.feature_json) -}},
+        {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
+            {% for col in columns.appended_activities %}
 
         {{ activity.relationship.aggregation_func }}(
-            {{- alias(activity, columns.ts) -}}
-        ) as {{ alias(activity, columns.ts) }}
+            {{- alias(activity, col.name) -}}
+        ) as {{ alias(activity, col.name)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
 
-        {%- if not loop.last -%},{% endif %}{% endfor %}
+            {% endfor %}
+        {% endfor %}
 
     from join_appended_activities
     group by
-        {{ columns.activity_id }},
-        {{ columns.customer }},
-        {{ columns.ts }},
-        {{ columns.activity }},
-        {{ columns.anonymous_customer_id }},
-        {{ columns.feature_json }},
-        {{ columns.revenue_impact }},
-        {{ columns.link }},
-        {{ columns.activity_occurrence }},
-        {{ columns.activity_repeated_at }}
+        {% for col in columns.primary_activity %}
+        {{- col }}{% if not loop.last %},{% endif %}
+        {% endfor %}
 )
 
-select * from aggregate_appended_activities
+select *  from aggregate_appended_activities
 
 {% endmacro %}
