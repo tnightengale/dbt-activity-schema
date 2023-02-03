@@ -15,7 +15,7 @@ models:
   - name: dataset__first_after_3
     tests:
       - dbt_utils.equality:
-          compare_model: ref("output__first_after_2")
+          compare_model: ref("output__first_after_3")
 
   - name: dataset__first_before
     tests:
