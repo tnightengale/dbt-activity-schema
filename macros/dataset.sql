@@ -33,6 +33,7 @@ params:
 {% set columns = dbt_activity_schema.columns() %}
 {% set stream = dbt_activity_schema.globals().stream %}
 {% set alias = dbt_activity_schema.alias %}
+{% set json_unpack_key = dbt_activity_schema.json_unpack_key %}
 
 with
 
@@ -43,9 +44,9 @@ join_appended_activities as (
         {% endfor %}
 
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
-            {% for col in columns.appended_activities %}
+            {% for col in activity.columns_to_append %}
 
-        stream_{{ i }}.{{ col.name }} as {{ alias(activity, col.name)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
+        stream_{{ i }}.{{ col }} as {{ alias(activity, col) }}{% if not (last_outer_loop and loop.last) %},{% endif %}
 
             {% endfor %}
         {% endfor %}
@@ -58,6 +59,15 @@ join_appended_activities as (
         on (
             stream_{{ i }}.{{ columns.customer }} = stream.{{ columns.customer }}
             and stream_{{ i -}}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
+
+            {% for col in activity.feature_json_join_columns %}
+            {% set _stream_i -%} stream_{{ i }}.{{ columns.feature_json }} {%- endset %}
+            {% set _stream -%} stream.{{ columns.feature_json }} {%- endset %}
+
+            and {{ json_unpack_key(_stream_i, col) }} = {{ json_unpack_key(_stream, col) }}
+
+            {% endfor %}
+
             and {{ activity.relationship.join_clause(i) }}
         )
 
@@ -74,11 +84,11 @@ aggregate_appended_activities as (
         {% endfor %}
 
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
-            {% for col in columns.appended_activities %}
+            {% for col in activity.columns_to_append %}
 
         {{ activity.relationship.aggregation_func }}(
-            {{- alias(activity, col.name) -}}
-        ) as {{ alias(activity, col.name)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
+            {{- alias(activity, col) -}}
+        ) as {{ alias(activity, col)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
 
             {% endfor %}
         {% endfor %}

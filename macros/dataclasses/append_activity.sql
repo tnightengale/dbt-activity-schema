@@ -1,8 +1,9 @@
-{% macro append_activity(relationship_name, activity_name) %}
-	{{ return(adapter.dispatch("append_activity", "dbt_activity_schema")(relationship_name, activity_name))}}
-{% endmacro %}
-
-{% macro default__append_activity(relationship_name, activity_name) %}
+{% macro append_activity(
+    relationship_name,
+    activity_name,
+    override_appended_columns=[],
+    feature_json_join_columns=[]
+) %}
 
 {# An activity to append to the `primary_activity`.
 
@@ -18,10 +19,20 @@ params:
             6. "last_after"
             7. "aggregate_after"
             8. "aggregate_all_ever"
-            
+
     activity_name: str
         The string identifier of the activity in the stream to append (join).
+
+    override_appended_columns: List[str]
+        List of columns to join to the primary activity, defaults to the project var `appended_activity_columns`.
+
+    feature_json_join_columns: List[str]
+        List of additional keys in the feature_json to extract and join on.
 #}
+
+{% set default_appended_activity_columns = dbt_activity_schema.columns().appended_activities %}
+
+{% set columns_to_append = override_appended_columns if override_appended_columns != [] else default_appended_activity_columns %}
 
 {% set relationship_factory = dict(
     first_before = dbt_activity_schema.first_before(),
@@ -34,6 +45,8 @@ params:
 
 {% do return(namespace(
     name = activity_name,
+    columns_to_append = columns_to_append,
+    feature_json_join_columns = feature_json_join_columns,
     relationship = relationship_factory[relationship_name]
 
 )) %}
