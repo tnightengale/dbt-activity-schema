@@ -19,7 +19,7 @@
     )
 %}
 
-{% do column_names.update(var("column_names", {})) %}
+{% do column_names.update(var("override_columns", {})) %}
 
 
 {% set primary_activity_columns = var("primary_activity_columns", column_names.values() | list) %}

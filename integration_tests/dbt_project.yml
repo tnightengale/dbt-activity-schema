@@ -30,7 +30,6 @@ vars:
     - link
     - activity_occurrence
     - activity_repeated_at
-
   appended_activity_columns:
     - feature_json
     - ts
