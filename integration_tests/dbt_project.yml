@@ -19,29 +19,20 @@ models:
   +materialized: table
 
 vars:
-  running_intergration_tests: true
-  activity_schema_required_column_aliases:
-    ts: ts
-    customer: customer
-    activity: activity
-    activity_occurrence: activity_occurrence
-    activity_repeated_at: activity_repeated_at
-  activity_schema_primary_activity_columns:
+  primary_activity_columns:
+    - activity_id
     - customer
     - ts
-    - activity_occurrence
-    - activity_repeated_at
-    - activity_id
     - activity
     - anonymous_customer_id
     - feature_json
     - revenue_impact
     - link
-  activity_schema_appended_activities_columns:
-    - name: feature_json
-      aggregation: min
-    - name: ts
-      aggregation: min
+    - activity_occurrence
+    - activity_repeated_at
+  appended_activity_columns:
+    - feature_json
+    - ts
 
 seeds:
   dbt_activity_schema_integration_tests:

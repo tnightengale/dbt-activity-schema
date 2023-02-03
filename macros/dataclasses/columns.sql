@@ -4,68 +4,41 @@
 
 {% macro default__columns() %}
 
-{% set activity_schema_required_column_aliases = var(
-    "activity_schema_required_column_aliases",
+{% set column_names =
     dict(
+        activity_id = "activity_id",
         ts = "ts",
         customer = "customer",
+        anonymous_customer_id = "anonymous_customer_id",
         activity = "activity",
         activity_occurrence = "activity_occurrence",
-        activity_repeated_at = "activity_repeated_at"
+        activity_repeated_at = "activity_repeated_at",
+        feature_json = "feature_json",
+        revenue_impact = "revenue_impact",
+        link = "link"
     )
-) %}
+%}
 
-{% set required_columns = [
-    "ts",
-    "customer",
-    "activity",
-    "activity_occurrence",
-    "activity_repeated_at"
-] %}
+{% do column_names.update(var("override_columns", {})) %}
 
-{% set required_columns_provided = activity_schema_required_column_aliases.keys() | list %}
-{% if required_columns_provided != required_columns %}
-    {% set message %}
-    "Project variable 'activity_schema_required_column_aliases' must contain the following keys: " {{ required_columns }},
-    "Got: " {{ required_columns_provided }}
-    {% endset %}
-    {{ exceptions.raise_compiler_error(message)}}
-{% endif %}
 
-{% set activity_schema_primary_activity_columns = var(
-    "activity_schema_primary_activity_columns",
-    [
-        "activity_id",
-        "activity",
-        "anonymous_customer_id",
-        "feature_json",
-        "revenue_impact",
-        "link"
-    ]
-) %}
+{% set primary_activity_columns = var("primary_activity_columns", column_names.values() | list) %}
 
-{% set activity_schema_appended_activities_columns = var(
-    "activity_schema_appended_activities_columns",
-    [
-        dict(
-            name = "feature_json",
-            aggregation = "min"
-        ),
-        dict(
-            name = "ts",
-            aggregation = "min"
-        )
-    ]
-) %}
+{% set appended_activity_columns = var("appended_activity_columns", column_names.values() | list) %}
 
 {% do return(namespace(
-    ts = activity_schema_required_column_aliases["ts"],
-    customer = activity_schema_required_column_aliases["customer"],
-    activity = activity_schema_required_column_aliases["activity"],
-    activity_occurrence = activity_schema_required_column_aliases["activity_occurrence"],
-    activity_repeated_at = activity_schema_required_column_aliases["activity_repeated_at"],
-    primary_activity = activity_schema_primary_activity_columns,
-    appended_activities = activity_schema_appended_activities_columns
+    activity_id = column_names["activity_id"],
+    ts = column_names["ts"],
+    customer = column_names["customer"],
+    anonymous_customer_id = column_names["anonymous_customer_id"],
+    activity = column_names["activity"],
+    activity_occurrence = column_names["activity_occurrence"],
+    activity_repeated_at = column_names["activity_repeated_at"],
+    feature_json = column_names["feature_json"],
+    revenue_impact = column_names["revenue_impact"],
+    link = column_names["link"],
+    primary_activity = primary_activity_columns,
+    appended_activities = appended_activity_columns
 )) %}
 
 {% endmacro %}
