@@ -19,7 +19,20 @@ models:
   +materialized: table
 
 vars:
-  running_intergration_tests: true
+  primary_activity_columns:
+    - activity_id
+    - customer
+    - ts
+    - activity
+    - anonymous_customer_id
+    - feature_json
+    - revenue_impact
+    - link
+    - activity_occurrence
+    - activity_repeated_at
+  appended_activity_columns:
+    - feature_json
+    - ts
 
 seeds:
   dbt_activity_schema_integration_tests:
