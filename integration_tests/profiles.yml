@@ -6,7 +6,7 @@ integration_tests:
   outputs:
     duckdb:
       type: duckdb
-      path: tmp/dbt.duckdb
+      path: ":memory:"
       database: dbt
-      external_root: tmp/materialized # Materialize Models as CSV for Inspection
+      external_root: target/duckdb/materialized # Materialize Models as CSV for Inspection
   target: duckdb
