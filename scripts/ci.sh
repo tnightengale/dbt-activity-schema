@@ -6,3 +6,5 @@ main () {
     dbt deps
     dbt build -x
 }
+
+main
