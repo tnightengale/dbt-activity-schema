@@ -24,7 +24,7 @@ jobs:
       #   run: pip install -r requirements.txt
 
       - name: CI in Dockerfile
-        uses: ./.github/actions/docker.yml
+        uses: ./.github/actions/run_ci
 
       # - name: Run and Test
       #   run: |
