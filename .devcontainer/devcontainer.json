@@ -13,15 +13,15 @@
 			"extensions": [
 				"stkb.rewrap",
 				"yzhang.markdown-all-in-one",
-				"ms-toolsai.jupyter"
+				"ms-toolsai.jupyter",
+				"innoverio.vscode-dbt-power-user"
 			],
 			"settings": {
 				"files.insertFinalNewline": true,
 				"files.trimFinalNewlines": true,
 				"files.trimTrailingWhitespace": true,
 				"files.associations": {
-					"**/*/integration_tests/**/*.sql": "jinja-sql",
-					"/**/*/integration_tests/**/*.sql": "sql"
+					"/workspaces/dbt-activity-schema/**/*.sql": "jinja-sql"
 				},
 				"rewrap.autoWrap.enabled": true
 			}
