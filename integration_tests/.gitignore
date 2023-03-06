@@ -1,5 +1,5 @@
 target/
 dbt_packages/
 logs/
-tmp/materialized
+tmp/materialized/*.csv
 .DS_Store
