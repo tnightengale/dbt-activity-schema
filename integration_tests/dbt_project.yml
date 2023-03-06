@@ -16,7 +16,8 @@ target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
 models:
-  +materialized: table
+  +materialized: external
+  +format: csv
 
 vars:
   primary_activity_columns:
