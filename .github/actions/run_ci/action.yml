@@ -1,0 +1,5 @@
+name: 'Run CI'
+description: 'Run the CI using the main Dockerfile.'
+runs:
+  using: 'docker'
+  image: '../../../Dockerfile'

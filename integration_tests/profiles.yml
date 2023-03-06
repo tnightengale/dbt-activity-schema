@@ -3,16 +3,10 @@ config:
     use_colors: True
 
 integration_tests:
-  target: snowflake
   outputs:
-
-    snowflake:
-      type: snowflake
-      account: "{{ env_var('CI_SNOWFLAKE_DBT_ACCOUNT') }}"
-      user: "{{ env_var('CI_SNOWFLAKE_DBT_USER') }}"
-      password: "{{ env_var('CI_SNOWFLAKE_DBT_PASS') }}"
-      role: "{{ env_var('CI_SNOWFLAKE_DBT_ROLE') }}"
-      database: "{{ env_var('CI_SNOWFLAKE_DBT_DATABASE') }}"
-      warehouse: "{{ env_var('CI_SNOWFLAKE_DBT_WAREHOUSE') }}"
-      schema: dbt_activity_schema_integration_tests
-      threads: 1
+    duckdb:
+      type: duckdb
+      path: ":memory:"
+      database: dbt
+      external_root: tmp/materialized # Materialize Models as CSV for Inspection
+  target: duckdb

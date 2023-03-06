@@ -13,10 +13,11 @@ macro-paths: ["macros"]
 test-paths: ["tests"]
 
 target-path: "target"
-clean-targets: ["target", "dbt_modules"]
+clean-targets: ["target", "dbt_packages"]
 
 models:
-  +materialized: table
+  +materialized: external
+  +format: csv
 
 vars:
   primary_activity_columns:

@@ -1,9 +1,9 @@
-ACTIVITY_ID,CUSTOMER,TS,ACTIVITY,ANONYMOUS_CUSTOMER_ID,FEATURE_JSON,REVENUE_IMPACT,LINK,ACTIVITY_OCCURRENCE,ACTIVITY_REPEATED_AT,FIRST_AFTER_BOUGHT_SOMETHING_FEATURE_JSON,FIRST_AFTER_BOUGHT_SOMETHING_TS
-7,1,2022-01-06 22:10:11.000,visit page,,{"type": 1},0,,4,,,
-2,1,2022-01-01 22:10:11.000,visit page,,{"type": 1},0,,1,2022-01-03 22:10:11.000,,
-4,1,2022-01-03 22:10:11.000,visit page,,{"type": 2},0,,2,2022-01-04 22:10:11.000,,
-10,7,2022-01-09 22:10:11.000,visit page,,{"type": 2},0,,2,2022-01-10 22:10:11.000,,
-8,7,2022-01-07 22:10:11.000,visit page,,{"type": 1},0,,1,2022-01-09 22:10:11.000,,
-5,1,2022-01-04 22:10:11.000,visit page,,{"type": 2},0,,3,2022-01-06 22:10:11.000,{"type": 1},2022-01-05 22:10:11.000
-11,7,2022-01-10 22:10:11.000,visit page,,{"type": 2},0,,3,2022-01-12 22:10:11.000,{"type": 1},2022-01-11 22:10:11.000
-13,7,2022-01-12 22:10:11.000,visit page,,{"type": 1},0,,4,,,
+activity_id,customer,ts,activity,anonymous_customer_id,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,first_after_bought_something_feature_json,first_after_bought_something_ts
+5,1,2022-01-04 22:10:11,visit page,,"{""type"": 2}",0,,3,2022-01-06 22:10:11,"{""type"": 1}",2022-01-05 22:10:11
+11,7,2022-01-10 22:10:11,visit page,,"{""type"": 2}",0,,3,2022-01-12 22:10:11,"{""type"": 1}",2022-01-11 22:10:11
+2,1,2022-01-01 22:10:11,visit page,,"{""type"": 1}",0,,1,2022-01-03 22:10:11,,
+4,1,2022-01-03 22:10:11,visit page,,"{""type"": 2}",0,,2,2022-01-04 22:10:11,,
+7,1,2022-01-06 22:10:11,visit page,,"{""type"": 1}",0,,4,,,
+8,7,2022-01-07 22:10:11,visit page,,"{""type"": 1}",0,,1,2022-01-09 22:10:11,,
+10,7,2022-01-09 22:10:11,visit page,,"{""type"": 2}",0,,2,2022-01-10 22:10:11,,
+13,7,2022-01-12 22:10:11,visit page,,"{""type"": 1}",0,,4,,,
