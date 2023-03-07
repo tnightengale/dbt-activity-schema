@@ -2,6 +2,7 @@
 	{{ return(adapter.dispatch("columns", "dbt_activity_schema")())}}
 {% endmacro %}
 
+
 {% macro default__columns() %}
 
 {% set column_names =
@@ -19,26 +20,10 @@
     )
 %}
 
+{# Update names using the `override_columns` project but keep keys according to
+the Activity Schema V2 specification. #}
 {% do column_names.update(var("override_columns", {})) %}
 
-
-{% set primary_activity_columns = var("primary_activity_columns", column_names.values() | list) %}
-
-{% set appended_activity_columns = var("appended_activity_columns", column_names.values() | list) %}
-
-{% do return(namespace(
-    activity_id = column_names["activity_id"],
-    ts = column_names["ts"],
-    customer = column_names["customer"],
-    anonymous_customer_id = column_names["anonymous_customer_id"],
-    activity = column_names["activity"],
-    activity_occurrence = column_names["activity_occurrence"],
-    activity_repeated_at = column_names["activity_repeated_at"],
-    feature_json = column_names["feature_json"],
-    revenue_impact = column_names["revenue_impact"],
-    link = column_names["link"],
-    primary_activity = primary_activity_columns,
-    appended_activities = appended_activity_columns
-)) %}
+{% do return(column_names) %}
 
 {% endmacro %}

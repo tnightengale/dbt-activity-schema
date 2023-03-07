@@ -24,9 +24,9 @@ Use the `dataset.sql` macro with the appropriate params to generate a self-joine
 {{
     dbt_activity_schema.dataset(
         ref("example__activity_stream"),
-        dbt_activity_schema.primary_activity("All","bought something"),
+        dbt_activity_schema.primary_activity(dbt_activity_schema.occurance("all"),"bought something"),
         [
-            dbt_activity_schema.append_activity("first_before", "visited page")
+            dbt_activity_schema.appended_activity(dbt_activity_schema.relationship("first_before"), "visited page")
         ]
     )
 }}
