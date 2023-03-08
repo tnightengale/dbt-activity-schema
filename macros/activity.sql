@@ -1,14 +1,14 @@
 {% macro activity(
     relationship,
     activity_name,
-    override_columns=[],
+    activity_schema_v2_column_mappings=[],
     additional_join_condition=[]
 ) %}
 
 {{ return(adapter.dispatch("appended_activity", "dbt_activity_schema")(
     relationship,
     activity_name,
-    override_columns,
+    activity_schema_v2_column_mappings,
     additional_join_condition
 )) }}
 
@@ -18,7 +18,7 @@
 {% macro default__appended_activity(
     relationship,
     activity_name,
-    override_columns,
+    activity_schema_v2_column_mappings,
     additional_join_condition
 ) %}
 
@@ -34,22 +34,22 @@ params:
         The string identifier of the activity in the Activity Stream to join to
         the primary activity.
 
-    override_columns: List[str]
+    activity_schema_v2_column_mappings: List[str]
         List of columns to join to the primary activity, defaults to the project
         var `appended_activity_columns`.
 
-    additional_join_condition: f-string
+    additional_join_condition: str
         A valid sql boolean to condition the join of the appended activity. Can
-        optionally contain the python f-string placeholders "{stream}" and
-        "{joined}" in the string; these will be compiled with the correct
+        optionally contain the python f-string placeholders "{primary}" and
+        "{appended}" in the string; these will be compiled with the correct
         aliases.
 
         Eg:
 
-        "json_extract({stream}.feature_json, 'dim1')
-            = "json_extract({joined}.feature_json, 'dim1')"
+        "json_extract({primary}.feature_json, 'dim1')
+            = "json_extract({appended}.feature_json, 'dim1')"
 
-        The "{stream}" and "{joined}" placholders correctly compiled
+        The "{primary}" and "{appended}" placholders correctly compiled
         depending on the cardinatity of the joined activity in the
         `appended_activities` list argument to `dataset.sql`.
 
@@ -62,8 +62,8 @@ params:
         list argument.
 #}
 
-{% if override_columns %}
-    {% set columns = override_columns %}
+{% if activity_schema_v2_column_mappings %}
+    {% set columns = activity_schema_v2_column_mappings %}
 {% else %}
     {% set columns = var("dbt_activity_schema", {}).get(
         "default_dataset_columns", dbt_activity_schema.columns().values() | list

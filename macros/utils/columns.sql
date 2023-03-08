@@ -20,9 +20,9 @@
     )
 %}
 
-{# Update names using the `override_columns` project but keep keys according to
+{# Update names using the `activity_schema_v2_column_mappings` project but keep keys according to
 the Activity Schema V2 specification. #}
-{% do column_names.update(var("override_columns", {})) %}
+{% do column_names.update(var("dbt_activity_schema", {}).get("activity_schema_v2_column_mappings", {})) %}
 
 {% do return(column_names) %}
 

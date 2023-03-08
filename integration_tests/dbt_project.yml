@@ -23,10 +23,12 @@ vars:
   dbt_activity_schema:
     default_dataset_columns:
       - activity_id
-      - customer
+      - entity_uuid
       - ts
       - revenue_impact
-
+    activity_schema_v2_column_mappings:
+      customer: entity_uuid
+      anonymous_customer_id: anonymous_entity_uuid
 
 seeds:
   dbt_activity_schema_integration_tests:

@@ -11,8 +11,8 @@
                 "visit page",
                 ["feature_json", "activity_occurrence", "ts"],
                 additional_join_condition="
-                json_extract({stream}.feature_json, 'type')
-                = json_extract({joined}.feature_json, 'type')
+                json_extract({primary}.feature_json, 'type')
+                = json_extract({appended}.feature_json, 'type')
                 "
             )
         ]

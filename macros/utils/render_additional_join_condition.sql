@@ -6,14 +6,14 @@
 
 {%- macro default__render_additional_join_condition(clause, i) -%}
 
-{# Replace the "{stream}" and "{joined}" placeholders with appropriate
+{# Replace the "{primary}" and "{appended}" placeholders with appropriate
 cardinality.
 
 params:
 
     clause: str
-        The boolean join condition, with optional "{stream}" and
-        "{joined}" placeholders.
+        The boolean join condition, with optional "{primary}" and
+        "{appended}" placeholders.
 
     i: int
         The cardinality of the appended activity, and thus the self join of the
@@ -23,8 +23,8 @@ params:
 
 {%- do return(
     clause.format(
-        stream=dbt_activity_schema.generate_stream_alias(),
-        joined=dbt_activity_schema.generate_stream_alias(i)
+        primary=dbt_activity_schema.generate_stream_alias(),
+        appended=dbt_activity_schema.generate_stream_alias(i)
     )
 ) -%}
 
