@@ -1,14 +1,14 @@
 {% macro activity(
     relationship,
     activity_name,
-    activity_schema_v2_column_mappings=[],
+    override_columns=[],
     additional_join_condition=[]
 ) %}
 
 {{ return(adapter.dispatch("appended_activity", "dbt_activity_schema")(
     relationship,
     activity_name,
-    activity_schema_v2_column_mappings,
+    override_columns,
     additional_join_condition
 )) }}
 
@@ -18,7 +18,7 @@
 {% macro default__appended_activity(
     relationship,
     activity_name,
-    activity_schema_v2_column_mappings,
+    override_columns,
     additional_join_condition
 ) %}
 
@@ -34,7 +34,7 @@ params:
         The string identifier of the activity in the Activity Stream to join to
         the primary activity.
 
-    activity_schema_v2_column_mappings: List[str]
+    override_columns: List[str]
         List of columns to join to the primary activity, defaults to the project
         var `appended_activity_columns`.
 
@@ -62,8 +62,8 @@ params:
         list argument.
 #}
 
-{% if activity_schema_v2_column_mappings %}
-    {% set columns = activity_schema_v2_column_mappings %}
+{% if override_columns %}
+    {% set columns = override_columns %}
 {% else %}
     {% set columns = var("dbt_activity_schema", {}).get(
         "default_dataset_columns", dbt_activity_schema.columns().values() | list
