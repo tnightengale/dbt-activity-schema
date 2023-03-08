@@ -21,6 +21,7 @@ modelling framework.
   - [dataset (source)](#dataset-source)
   - [activity (source)](#activity-source)
 - [Relationships](#relationships)
+- [Warehouses](#warehouses)
 - [Contributions](#contributions)
 
 ## Install
@@ -207,6 +208,10 @@ dataset.
 ## Relationships
 See the [relationships/](macros/relationships/) path for the most up to date
 relationships and their documentation.
+
+## Warehouses
+To the best of the author's knowledge this jinja-macros in this package are
+supported for all dbt adapters.
 
 ## Contributions
 Contributions and feedback are welcome. Please create an issue if you'd like to
