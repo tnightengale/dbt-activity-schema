@@ -1,4 +1,4 @@
-activity_id,customer,ts,activity,anonymous_customer_id,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,last_ever_bought_something_feature_json,last_ever_bought_something_ts
+activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,last_ever_bought_something_feature_json,last_ever_bought_something_ts
 29,1,2022-01-28 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-01-30 22:10:11
 32,4,2022-01-31 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-02 22:10:11
 35,7,2022-02-03 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-05 22:10:11

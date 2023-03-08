@@ -1,4 +1,4 @@
-activity_id,ts,customer,activity,anonymous_customer_id,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at
+activity_id,ts,entity_uuid,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at
 2,2022-01-01 22:10:11,1,visited page,,[{""visited page"": 1}],0,,1,2022-01-28 22:10:11
 3,2022-01-02 22:10:11,1,signed up,,[{""signed up"": 1}],0,,1,2022-01-29 22:10:11
 4,2022-01-03 22:10:11,1,bought something,,[{""bought something"": 1}],100,,1,2022-01-30 22:10:11

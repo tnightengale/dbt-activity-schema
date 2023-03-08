@@ -20,20 +20,15 @@ models:
   +format: csv
 
 vars:
-  primary_activity_columns:
-    - activity_id
-    - customer
-    - ts
-    - activity
-    - anonymous_customer_id
-    - feature_json
-    - revenue_impact
-    - link
-    - activity_occurrence
-    - activity_repeated_at
-  appended_activity_columns:
-    - feature_json
-    - ts
+  dbt_activity_schema:
+    default_dataset_columns:
+      - activity_id
+      - entity_uuid
+      - ts
+      - revenue_impact
+    activity_schema_v2_column_mappings:
+      customer: entity_uuid
+      anonymous_customer_id: anonymous_entity_uuid
 
 seeds:
   dbt_activity_schema_integration_tests:
