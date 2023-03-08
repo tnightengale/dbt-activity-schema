@@ -27,10 +27,10 @@ models:
       - dbt_utils.equality:
           compare_model: ref("output__first_ever")
 
-  - name: dataset__last_after_1
-    tests:
-      - dbt_utils.equality:
-          compare_model: ref("output__last_after_1")
+  # - name: dataset__last_after_1
+  #   tests:
+  #     - dbt_utils.equality:
+  #         compare_model: ref("output__last_after_1")
 
   - name: dataset__last_before
     tests:

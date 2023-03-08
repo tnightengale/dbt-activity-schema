@@ -68,8 +68,15 @@ join_appended_activities as (
             and {{ stream(i) }}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
 
             -- Relationship Specific Join Conditions
-            and {{ activity.relationship.join_clause(i) }}
-
+            and (
+            {# nth_ever_join_clause relies on instantiated nth_occurance arg, in
+            addition to the i passed to the join #}
+            {% if activity.relationship.name == "nth_ever" %}
+            {{ activity.relationship.join_clause(activity.relationship.nth_occurance, i) }}
+            {% else %}
+            {{ activity.relationship.join_clause(i) }}
+            {% endif %}
+            )
             -- Additional Join Condition
             and ( {{ render(activity.additional_join_condition, i) }} )
         )
@@ -78,7 +85,7 @@ join_appended_activities as (
 
     -- Where Clause for the Primary Activity, Determined by the `occurance`
     where {{ stream() }}.{{ columns.activity }} = {{ dbt.string_literal(primary_activity.name) }}
-        and {{ primary_activity.where_clause }}
+        and {{ primary_activity.relationship.where_clause }}
 ),
 
 aggregate_appended_activities as (

@@ -1,6 +1,10 @@
 {% macro last_before_join_clause(i) %}
+
+{% set stream = dbt_activity_schema.generate_stream_alias %}
+{% set columns = dbt_activity_schema.columns() %}
+
 (
-    stream_{{ i -}}.{{- dbt_activity_schema.columns().ts }} <= coalesce(stream.{{- dbt_activity_schema.columns().ts }}, '1900-01-01'::timestamp)
+    {{ stream(i) }}.{{- columns.ts }} <= coalesce({{ stream() }}.{{- columns.ts }}, '1900-01-01'::timestamp)
 )
 {% endmacro %}
 

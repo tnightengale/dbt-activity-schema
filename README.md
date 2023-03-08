@@ -43,14 +43,14 @@ dataset by self-joining the activity stream model in your project, Eg:
     dbt_activity_schema.dataset(
         activity_stream_ref = ref("example__activity_stream"),
 
-        primary_activity = dbt_activity_schema.primary_activity(
-          dbt_activity_schema.occurance("all"),"bought something"),
+        primary_activity = dbt_activity_schema.activity(
+          dbt_activity_schema.all_ever(),"bought something"),
 
         appended_activities = [
-          dbt_activity_schema.appended_activity(
-              dbt_activity_schema.relationship("first_before"), "visited page"),
-           dbt_activity_schema.appended_activity(
-              dbt_activity_schema.relationship("first_after"), "bought item"),
+          dbt_activity_schema.activity(
+              dbt_activity_schema.first_before(), "visited page"),
+           dbt_activity_schema.activity(
+              dbt_activity_schema.first_after(), "bought item"),
         ]
     )
 }}

@@ -1,4 +1,4 @@
-{% macro appended_activity(
+{% macro activity(
     relationship,
     activity_name,
     override_columns=[],
@@ -26,7 +26,7 @@
 
 params:
 
-    relationship: relationship (/dataclasses)
+    relationship: relationship
         The relationship that defines the how the appended activity is joined to
         the primary activity.
 
@@ -62,8 +62,13 @@ params:
         list argument.
 #}
 
-
-{% set columns = override_columns if override_columns != [] else var("appended_activity_columns", dbt_activity_schema.columns().values() | list) %}
+{% if override_columns %}
+    {% set columns = override_columns %}
+{% else %}
+    {% set columns = var("dbt_activity_schema", {}).get(
+        "default_dataset_columns", dbt_activity_schema.columns().values() | list
+    ) %}
+{% endif %}
 
 {% set additional_join_condition = additional_join_condition if additional_join_condition else "true" %}
 
