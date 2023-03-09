@@ -68,10 +68,10 @@ https://github.com/tnightengale/dbt-activity-schema/releases.
 ## Usage
 
 ### Create a Dataset
-Use the [dataset macro](###dataset-source) with the appropriate arguments to
+Use the [dataset macro](#dataset-source) with the appropriate arguments to
 derive a Dataset by self-joining the Activity Stream model in your project. The
-[dataset macro](###dataset) will compile based on the provided [activity
-macros](###activity-source) and the [relationship macros](##relationships). It
+[dataset macro](#dataset-source) will compile based on the provided [activity
+macros](#activity-source) and the [relationship macros](#relationships). It
 can then be nested in a CTE in a dbt-Core model. Eg:
 ```c
 // my_first_dataset.sql
@@ -107,7 +107,7 @@ and, by default, it expects the columns in that spec to exist in the Activity
 Stream model.
 
 #### Required Columns
-In order for critical joins in the [dataset macro](###dataset) to work as
+In order for critical joins in the [dataset macro](#dataset-source) to work as
 expected, the following columns must exist:
   - **`activity`**: A string or ID that identifies the action or fact
     attributable to the `customer`.
@@ -142,7 +142,7 @@ vars:
 
 #### Included Dataset Columns
 The set of columns that are included in the compiled SQL of the [dataset
-macro](###dataset-source) can be configured using the nested
+macro](#dataset-source) can be configured using the nested
 `default_dataset_columns` project var. Eg:
 ```yml
 # dbt_project.yml
@@ -162,7 +162,7 @@ vars:
 ```
 
 These defaults can be overriden using the `override_columns` argument in the
-[activity macro](###activity-source).
+[activity macro](#activity-source).
 
 #### Configure Appended Activity Column Names
 The naming convention of the columns, in the activities passed to the
@@ -183,11 +183,11 @@ Generate the SQL for self-joining the Activity Stream.
 
   The dbt `ref()` that points to the activty stream model.
 
-- **`primary_activity (required)`** : [activity](###activity)
+- **`primary_activity (required)`** : [activity](#activity-source)
 
   The primary activity of the derived dataset.
 
-- **`appended_activities (optional)`** : List [ [activity](###activity) ]
+- **`appended_activities (optional)`** : List [ [activity](#activity-source) ]
 
   The list of appended activities to self-join to the primary activity. All
   appended activities and their relationship are with respect to the primary
@@ -198,7 +198,7 @@ Represents either the primary activity or one of the appended activities in a
 dataset.
 
 **args:**
-- **`relationship (required)`** : [relationship](##relationships)
+- **`relationship (required)`** : [relationship](#relationships)
 
   The relationship that defines how the activity is filtered or joined,
   depending on if it is provided to the `primary_activity` or
@@ -265,7 +265,6 @@ in two ways:
 Include all occurrences of the activity in the dataset.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ✅
 
@@ -284,7 +283,6 @@ Include the nth occurrence of the activity in the dataset.
   The occurrence of the activity to include.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ✅
 
@@ -297,7 +295,6 @@ customer's Nth time calling on every row, regardless of when it happened.
 Include the first ever occurrence of the activity in the dataset.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ✅
 
@@ -311,7 +308,6 @@ before or after visiting the website.
 Include the last ever occurrence of the activity in the dataset.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ✅
 
@@ -324,7 +320,6 @@ customer's last time calling on every row, regardless of when it happened.
 Append the last activity to occur before the primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -338,7 +333,6 @@ This will add the stage of the customer at the moment they visited the website.
 Append the first activity to occur after the primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -353,8 +347,9 @@ Append the last activity to occur after the primary activity.
 
 **Dataset Usage:**
 - `primary_activity:` ✅
-- `appended_activity:` ❌> Eg :visit, give me the last time a customer does an
-activity after the visit)) Ex. For the first 'visited_website' append **Last
+- `appended_activity:` ❌
+
+**Example Usage:** For the **First Ever** 'visited_website' append **Last
 After** 'returned_item. The most recent time a customer returned an item after
 their first visit.
 
@@ -362,7 +357,6 @@ their first visit.
 Append the first activity to occur before the primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -376,7 +370,6 @@ Append the first activity to occur after each occurrence of the primary
 activity, but before the next occurrence of the primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -391,7 +384,6 @@ Append a count of all activities that occurred after each occurrence of the
 primary activity, but before the next occurrence of the primary activty.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -405,7 +397,6 @@ Append a count of all activities that occurred before each occurrence of the
 primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
@@ -420,7 +411,6 @@ Append the last activity that occurred after each occurrence of the primary
 activity and before the next occurrence of the primary activity.
 
 **Dataset Usage:**
-
 - `primary_activity:` ✅
 - `appended_activity:` ❌
 
