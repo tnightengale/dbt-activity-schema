@@ -320,8 +320,8 @@ customer's last time calling on every row, regardless of when it happened.
 Append the last activity to occur before the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -333,8 +333,8 @@ This will add the stage of the customer at the moment they visited the website.
 Append the first activity to occur after the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -346,8 +346,8 @@ the site.
 Append the last activity to occur after the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:** For the **First Ever** 'visited_website' append **Last
 After** 'returned_item. The most recent time a customer returned an item after
@@ -357,8 +357,8 @@ their first visit.
 Append the first activity to occur before the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -370,8 +370,8 @@ Append the first activity to occur after each occurrence of the primary
 activity, but before the next occurrence of the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -384,8 +384,8 @@ Append a count of all activities that occurred after each occurrence of the
 primary activity, but before the next occurrence of the primary activty.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -397,8 +397,8 @@ Append a count of all activities that occurred before each occurrence of the
 primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
@@ -411,8 +411,8 @@ Append the last activity that occurred after each occurrence of the primary
 activity and before the next occurrence of the primary activity.
 
 **Dataset Usage:**
-- `primary_activity:` ✅
-- `appended_activity:` ❌
+- `primary_activity:` ❌
+- `appended_activity:` ✅
 
 **Example Usage:**
 
