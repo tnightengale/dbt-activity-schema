@@ -2,7 +2,8 @@
 
 A [dbt](https://docs.getdbt.com/docs/introduction)
 [package](https://docs.getdbt.com/docs/build/packages#what-is-a-package) to
-query the [Activity Schema](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md) data
+query the [Activity
+Schema](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md) data
 modelling framework, based on the
 [relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships).
 
@@ -32,13 +33,15 @@ modelling framework, based on the
   - [Aggregate In Between (TODO)](#aggregate-in-between-todo)
   - [Aggregate In Before (TODO)](#aggregate-in-before-todo)
   - [Last In Between (TODO)](#last-in-between-todo)
+- [Warehouses](#warehouses)
 - [Contributions](#contributions)
 
 ## Overview
 This [dbt](https://docs.getdbt.com/docs/introduction) package includes
 [macros](https://docs.getdbt.com/docs/build/jinja-macros) to simplify the
-querying of an [Activity Stream](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#activity-stream), the primary table in the Activity Schema data
-modelling framework.
+querying of an [Activity
+Stream](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#activity-stream),
+the primary table in the Activity Schema data modelling framework.
 
 > **Note:** Use this package to query an Activity Stream model that is _already
 > defined_ in a dbt project. **It is not intended to _create_ an Activity Stream
@@ -100,7 +103,8 @@ select * from dataset_cte
 ### Configure Columns
 This package conforms to the [Activity Schema V2
 Specification](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#entity-table)
-and, by default, it expects the columns in that spec to exist in the Activity Stream model.
+and, by default, it expects the columns in that spec to exist in the Activity
+Stream model.
 
 #### Required Columns
 In order for critical joins in the [dataset macro](###dataset) to work as
@@ -174,7 +178,8 @@ for more details.
 Generate the SQL for self-joining the Activity Stream.
 
 **args:**
-- **`activity_stream_ref (required)`** : [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)
+- **`activity_stream_ref (required)`** :
+  [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)
 
   The dbt `ref()` that points to the activty stream model.
 
@@ -185,7 +190,8 @@ Generate the SQL for self-joining the Activity Stream.
 - **`appended_activities (optional)`** : List [ [activity](###activity) ]
 
   The list of appended activities to self-join to the primary activity. All
-  appended activities and their relationship are with respect to the primary activity.
+  appended activities and their relationship are with respect to the primary
+  activity.
 
 ### Activity ([source](macros/activity.sql))
 Represents either the primary activity or one of the appended activities in a
@@ -205,8 +211,8 @@ dataset.
 
 - **`override_columns (optional)`** : List [ str ]
 
-  List of columns to include for the activity. Setting this Overrides the defaults configured
-  by the `default_dataset_columns` project var.
+  List of columns to include for the activity. Setting this Overrides the
+  defaults configured by the `default_dataset_columns` project var.
 
 - **`additional_join_condition (optional)`** : str
 
@@ -221,9 +227,9 @@ dataset.
   "json_extract({primary}.feature_json, 'dim1') =
       json_extract({appended}.feature_json, 'dim1')"
   ```
-  The `{primary}` and `{appended}` placeholders compile according to
-  the cardinality of the activity in the `appended_activities` list
-  argument to `dataset.sql`.
+  The `{primary}` and `{appended}` placeholders compile according to the
+  cardinality of the activity in the `appended_activities` list argument to
+  `dataset.sql`.
 
   Compiled:
   ```python
@@ -234,7 +240,8 @@ dataset.
   argument.
 
 ## Relationships
-In the Activity Schema framework, [relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships)
+In the Activity Schema framework,
+[relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships)
 define how an activity is joined/appended to the primary activity in a
 self-joining query of the Activity Stream.
 
@@ -296,7 +303,9 @@ Include the first ever occurrence of the activity in the dataset.
 
 **Example Usage:**
 
-For every 'visited_website' append **First Ever** 'called_us'. This will add the customer's first time calling to every row, regardless of whether it happened before or after visiting the website.
+For every 'visited_website' append **First Ever** 'called_us'. This will add the
+customer's first time calling to every row, regardless of whether it happened
+before or after visiting the website.
 
 ### Last Ever ([source](./macros/relationships/last_ever.sql))
 Include the last ever occurrence of the activity in the dataset.
@@ -308,7 +317,8 @@ Include the last ever occurrence of the activity in the dataset.
 
 **Example Usage:**
 
-For every 'visited_website' append **Last Ever** 'called_us'. This will add the customer's last time calling on every row, regardless of when it happened.
+For every 'visited_website' append **Last Ever** 'called_us'. This will add the
+customer's last time calling on every row, regardless of when it happened.
 
 ### Last Before ([source](./macros/relationships/append_only/last_before.sql))
 Append the last activity to occur before the primary activity.
@@ -320,7 +330,9 @@ Append the last activity to occur before the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **Last Before** 'updated_opportunity_stage'. This will add the stage of the customer at the moment they visited the website.  (ideal for slowly changing dimensions)
+For every 'visited_website' append **Last Before** 'updated_opportunity_stage'.
+This will add the stage of the customer at the moment they visited the website.
+(ideal for slowly changing dimensions)
 
 ### First After ([source](./macros/relationships/append_only/first_after.sql))
 Append the first activity to occur after the primary activity.
@@ -332,17 +344,19 @@ Append the first activity to occur after the primary activity.
 
 **Example Usage:**
 
-For the first 'visited_website' append **First After** 'signed_up'. For each customer add whether or not they converted any time after their first visit to the site.
+For the first 'visited_website' append **First After** 'signed_up'. For each
+customer add whether or not they converted any time after their first visit to
+the site.
 
 ### Last After ([source](./macros/relationships/append_only/last_after.sql))
 Append the last activity to occur after the primary activity.
 
 **Dataset Usage:**
 - `primary_activity:` ✅
-- `appended_activity:` ❌> Eg
-:visit, give me the last time a customer does an activity after the visit))
-Ex. For the first 'visited_website' append **Last After** 'returned_item.
-The most recent time a customer returned an item after their first visit.
+- `appended_activity:` ❌> Eg :visit, give me the last time a customer does an
+activity after the visit)) Ex. For the first 'visited_website' append **Last
+After** 'returned_item. The most recent time a customer returned an item after
+their first visit.
 
 ### First Before ([source](./macros/relationships/append_only/first_before.sql))
 Append the first activity to occur before the primary activity.
@@ -354,11 +368,12 @@ Append the first activity to occur before the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **First Before** 'opened_email'. This will add the the first email that the customer opened before their first visit.
+For every 'visited_website' append **First Before** 'opened_email'. This will
+add the the first email that the customer opened before their first visit.
 
 ### First In Between (TODO)
-Append the first activity to occur after each occurrence of the primary activity, but before the
-next occurrence of the primary activity.
+Append the first activity to occur after each occurrence of the primary
+activity, but before the next occurrence of the primary activity.
 
 **Dataset Usage:**
 
@@ -367,7 +382,9 @@ next occurrence of the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **First In Between** 'completed_order'. On every website visit, did the customer order before the next visit. (generally used for event-based conversion)
+For every 'visited_website' append **First In Between** 'completed_order'. On
+every website visit, did the customer order before the next visit. (generally
+used for event-based conversion)
 
 ### Aggregate In Between (TODO)
 Append a count of all activities that occurred after each occurrence of the
@@ -380,7 +397,8 @@ primary activity, but before the next occurrence of the primary activty.
 
 **Example Usage:**
 
-For every 'visited_website' append **Aggregate In Between** 'viewed_page'. On every website visit, count the number of pages before the next visit.
+For every 'visited_website' append **Aggregate In Between** 'viewed_page'. On
+every website visit, count the number of pages before the next visit.
 
 ### Aggregate In Before (TODO)
 Append a count of all activities that occurred before each occurrence of the
@@ -393,7 +411,9 @@ primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **Aggregate Before** **Completed Order**. On every website visit, sum the revenue that was spent on completed orders before this visit.
+For every 'visited_website' append **Aggregate Before** **Completed Order**. On
+every website visit, sum the revenue that was spent on completed orders before
+this visit.
 
 ### Last In Between (TODO)
 Append the last activity that occurred after each occurrence of the primary
@@ -406,7 +426,12 @@ activity and before the next occurrence of the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **Last In Between** 'viewed_page'. On every website visit, what was the last page that they viewed before leaving.
+For every 'visited_website' append **Last In Between** 'viewed_page'. On every
+website visit, what was the last page that they viewed before leaving.
+
+## Warehouses
+To the best of the author's knowledge, this package is compatible with all dbt
+adapters.
 
 ## Contributions
 Contributions and feedback are welcome. Please create an issue if you'd like to
