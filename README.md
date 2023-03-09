@@ -1,14 +1,13 @@
 # dbt-activity-schema <!-- omit in toc -->
 
-A [dbt-Core](https://docs.getdbt.com/docs/introduction)
-[package](https://docs.getdbt.com/docs/build/packages#what-is-a-package) which
-contains macros to create derived Datasets by self-joining an [Activity
-Stream](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#activity-stream),
-the primary table in the [Activity
-Schema](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md) data
-modelling framework.
+A [dbt](https://docs.getdbt.com/docs/introduction)
+[package](https://docs.getdbt.com/docs/build/packages#what-is-a-package) to
+query the [Activity Schema](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md) data
+modelling framework, based on the
+[relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships).
 
 ## Table of Contents <!-- omit in toc -->
+- [Overview](#overview)
 - [Install](#install)
 - [Usage](#usage)
   - [Create a Dataset](#create-a-dataset)
@@ -18,10 +17,39 @@ modelling framework.
     - [Included Dataset Columns](#included-dataset-columns)
     - [Configure Appended Activity Column Names](#configure-appended-activity-column-names)
 - [Macros](#macros)
-  - [dataset (source)](#dataset-source)
-  - [activity (source)](#activity-source)
+  - [Dataset (source)](#dataset-source)
+  - [Activity (source)](#activity-source)
 - [Relationships](#relationships)
+  - [All Ever (source) (*Custom*)](#all-ever-source-custom)
+  - [Nth Ever (source) (*Custom*)](#nth-ever-source-custom)
+  - [First Ever (source)](#first-ever-source)
+  - [Last Ever (source)](#last-ever-source)
+  - [Last Before (source)](#last-before-source)
+  - [First After (source)](#first-after-source)
+  - [Last After (source)](#last-after-source)
+  - [First Before (source)](#first-before-source)
+  - [First In Between (TODO)](#first-in-between-todo)
+  - [Aggregate In Between (TODO)](#aggregate-in-between-todo)
+  - [Aggregate In Before (TODO)](#aggregate-in-before-todo)
+  - [Last In Between (TODO)](#last-in-between-todo)
 - [Contributions](#contributions)
+
+## Overview
+This [dbt](https://docs.getdbt.com/docs/introduction) package includes
+[macros](https://docs.getdbt.com/docs/build/jinja-macros) to simplify the
+querying of an [Activity Stream](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#activity-stream), the primary table in the Activity Schema data
+modelling framework.
+
+> **Note:** Use this package to query an Activity Stream model that is _already
+> defined_ in a dbt project. **It is not intended to _create_ an Activity Stream
+> model in a dbt project.**
+
+It relies on the [Activity Schema V2
+Specification](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md).
+
+It leverages and extends the
+[relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships)
+defined in that spec to self-join activities in the Activity Stream.
 
 ## Install
 Include in `packages.yml`:
@@ -141,11 +169,11 @@ macros](https://docs.getdbt.com/reference/dbt-jinja-functions/dispatch#overridin
 for more details.
 
 ## Macros
----
-### dataset ([source](macros/dataset.sql))
-Create a derived dataset using self-joins from an Activity Stream model.
 
-**params:**
+### Dataset ([source](macros/dataset.sql))
+Generate the SQL for self-joining the Activity Stream.
+
+**args:**
 - **`activity_stream_ref (required)`** : [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)
 
   The dbt `ref()` that points to the activty stream model.
@@ -156,13 +184,14 @@ Create a derived dataset using self-joins from an Activity Stream model.
 
 - **`appended_activities (optional)`** : List [ [activity](###activity) ]
 
-  The list of appended activities to self-join to the primary activity.
+  The list of appended activities to self-join to the primary activity. All
+  appended activities and their relationship are with respect to the primary activity.
 
-### activity ([source](macros/activity.sql))
+### Activity ([source](macros/activity.sql))
 Represents either the primary activity or one of the appended activities in a
 dataset.
 
-**params:**
+**args:**
 - **`relationship (required)`** : [relationship](##relationships)
 
   The relationship that defines how the activity is filtered or joined,
@@ -205,8 +234,179 @@ dataset.
   argument.
 
 ## Relationships
-See the [relationships/](macros/relationships/) path for the most up to date
-relationships and their documentation.
+In the Activity Schema framework, [relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships)
+define how an activity is joined/appended to the primary activity in a
+self-joining query of the Activity Stream.
+
+This package contains [relationship macros](./macros/relationships/) for each
+relationship defined in the Activity Schema.
+
+In the Activity Schema framework, a relationship encapsulates the logic for
+self-joining an activity.
+
+This package extends the relationships defined in the [Activity Schema V2
+Specification](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md)
+in two ways:
+1. Some relationships can be applied to the Primary Activity *and* Appended
+   Activities, whereas others can only be applied to the Appended Activities.
+   - These are denoted with ✅, ❌ in the **Dataset Usage** section of each
+     relationship below.
+2. Relationships that are not in the spec can be defined and contributed to this
+   project. These are denoted below with the (*Custom*) tag.
+
+### All Ever ([source](./macros/relationships/all_ever.sql)) (*Custom*)
+Include all occurrences of the activity in the dataset.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **All Ever** 'called_us'. This will result in
+a cross join of the activities. Therefore, this relationship, while it can be
+used for an *Appended Activity* is usually applied to a *Primary Activity*.
+
+### Nth Ever ([source](./macros/relationships/last_ever.sql)) (*Custom*)
+Include the nth occurrence of the activity in the dataset.
+
+**args:**
+- **`nth_occurance (required)`** : int
+
+  The occurrence of the activity to include.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **Nth Ever** 'called_us'. This will add the
+customer's Nth time calling on every row, regardless of when it happened.
+
+### First Ever ([source](./macros/relationships/first_ever.sql))
+Include the first ever occurrence of the activity in the dataset.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **First Ever** 'called_us'. This will add the customer's first time calling to every row, regardless of whether it happened before or after visiting the website.
+
+### Last Ever ([source](./macros/relationships/last_ever.sql))
+Include the last ever occurrence of the activity in the dataset.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **Last Ever** 'called_us'. This will add the customer's last time calling on every row, regardless of when it happened.
+
+### Last Before ([source](./macros/relationships/append_only/last_before.sql))
+Append the last activity to occur before the primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **Last Before** 'updated_opportunity_stage'. This will add the stage of the customer at the moment they visited the website.  (ideal for slowly changing dimensions)
+
+### First After ([source](./macros/relationships/append_only/first_after.sql))
+Append the first activity to occur after the primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For the first 'visited_website' append **First After** 'signed_up'. For each customer add whether or not they converted any time after their first visit to the site.
+
+### Last After ([source](./macros/relationships/append_only/last_after.sql))
+Append the last activity to occur after the primary activity.
+
+**Dataset Usage:**
+- `primary_activity:` ✅
+- `appended_activity:` ❌> Eg
+:visit, give me the last time a customer does an activity after the visit))
+Ex. For the first 'visited_website' append **Last After** 'returned_item.
+The most recent time a customer returned an item after their first visit.
+
+### First Before ([source](./macros/relationships/append_only/first_before.sql))
+Append the first activity to occur before the primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **First Before** 'opened_email'. This will add the the first email that the customer opened before their first visit.
+
+### First In Between (TODO)
+Append the first activity to occur after each occurrence of the primary activity, but before the
+next occurrence of the primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **First In Between** 'completed_order'. On every website visit, did the customer order before the next visit. (generally used for event-based conversion)
+
+### Aggregate In Between (TODO)
+Append a count of all activities that occurred after each occurrence of the
+primary activity, but before the next occurrence of the primary activty.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **Aggregate In Between** 'viewed_page'. On every website visit, count the number of pages before the next visit.
+
+### Aggregate In Before (TODO)
+Append a count of all activities that occurred before each occurrence of the
+primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **Aggregate Before** **Completed Order**. On every website visit, sum the revenue that was spent on completed orders before this visit.
+
+### Last In Between (TODO)
+Append the last activity that occurred after each occurrence of the primary
+activity and before the next occurrence of the primary activity.
+
+**Dataset Usage:**
+
+- `primary_activity:` ✅
+- `appended_activity:` ❌
+
+**Example Usage:**
+
+For every 'visited_website' append **Last In Between** 'viewed_page'. On every website visit, what was the last page that they viewed before leaving.
 
 ## Contributions
 Contributions and feedback are welcome. Please create an issue if you'd like to
