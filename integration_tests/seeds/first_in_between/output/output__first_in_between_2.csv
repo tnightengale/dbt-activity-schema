@@ -1,0 +1,9 @@
+activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,first_in_between_bought_something_feature_json,first_in_between_bought_something_ts
+5,1,2022-01-04 22:10:11,visit page,,"{""type"": 2}",0,,3,2022-01-06 22:10:11,"{""type"": 1}",2022-01-05 22:10:11
+11,7,2022-01-10 22:10:11,visit page,,"{""type"": 2}",0,,3,2022-01-12 22:10:11,"{""type"": 1}",2022-01-11 22:10:11
+2,1,2022-01-01 22:10:11,visit page,,"{""type"": 1}",0,,1,2022-01-03 22:10:11,,
+4,1,2022-01-03 22:10:11,visit page,,"{""type"": 2}",0,,2,2022-01-04 22:10:11,,
+7,1,2022-01-06 22:10:11,visit page,,"{""type"": 1}",0,,4,,,
+8,7,2022-01-07 22:10:11,visit page,,"{""type"": 1}",0,,1,2022-01-09 22:10:11,,
+10,7,2022-01-09 22:10:11,visit page,,"{""type"": 2}",0,,2,2022-01-10 22:10:11,,
+13,7,2022-01-12 22:10:11,visit page,,"{""type"": 1}",0,,4,,,
