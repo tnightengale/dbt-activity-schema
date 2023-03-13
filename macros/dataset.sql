@@ -109,7 +109,7 @@ rejoin_aggregated_activities as (
             {% endfor %}
         {% endfor %}
 
-    from filter_activity_stream_using_primary_activity as {{ stream() }}
+        {{ render_agg(col, activity) }}
 
     {% for activity in appended_activities %}{% set i = loop.index %}
 

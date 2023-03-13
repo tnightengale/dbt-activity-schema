@@ -64,15 +64,11 @@ params:
 
 {% set columns = dbt_activity_schema.columns() %}
 
-{# Required for the joins, but not necessarily included in the final result. #}
-{% set required_columns = [
-    columns.activity_id,
-    columns.activity,
-    columns.ts,
-    columns.customer,
-    columns.activity_occurrence,
-    columns.activity_repeated_at
-] %}
+{# The columns.feature_json requires columns.ts to be present. #}
+{% if (dbt_activity_schema.columns().feature_json in columns) and
+    (dbt_activity_schema.columns().ts not in columns) %}
+{% do columns.append(dbt_activity_schema.columns().ts) %}
+{% endif %}
 
 {% for col in included_columns %}
     {% if col in required_columns %}

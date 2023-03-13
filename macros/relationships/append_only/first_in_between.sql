@@ -12,11 +12,17 @@
 )
 {% endmacro %}
 
+
+{% macro first_in_between_aggregation_func() %}
+min({{ caller() }})
+{% endmacro %}
+
+
 {% macro first_in_between() %}
 
 {% do return(namespace(
     name="first_in_between",
-    aggregation_func=dbt_activity_schema.min,
+    aggregation_func=dbt_activity_schema.first_in_between_aggregation_func,
     join_clause=dbt_activity_schema.first_in_between_join_clause
 )) %}
 
