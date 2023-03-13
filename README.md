@@ -25,14 +25,14 @@ modelling framework, based on the
   - [Nth Ever (source) (*Custom*)](#nth-ever-source-custom)
   - [First Ever (source)](#first-ever-source)
   - [Last Ever (source)](#last-ever-source)
+  - [First Before (source)](#first-before-source)
   - [Last Before (source)](#last-before-source)
   - [First After (source)](#first-after-source)
   - [Last After (source)](#last-after-source)
-  - [First Before (source)](#first-before-source)
-  - [First In Between (TODO)](#first-in-between-todo)
+  - [First In Between (source)](#first-in-between-source)
+  - [Last In Between (source)](#last-in-between-source)
   - [Aggregate In Between (TODO)](#aggregate-in-between-todo)
   - [Aggregate In Before (TODO)](#aggregate-in-before-todo)
-  - [Last In Between (TODO)](#last-in-between-todo)
 - [Warehouses](#warehouses)
 - [Contributions](#contributions)
 
@@ -316,6 +316,18 @@ Include the last ever occurrence of the activity in the dataset.
 For every 'visited_website' append **Last Ever** 'called_us'. This will add the
 customer's last time calling on every row, regardless of when it happened.
 
+### First Before ([source](./macros/relationships/append_only/first_before.sql))
+Append the first activity to occur before the primary activity.
+
+**Dataset Usage:**
+- `primary_activity:` ❌
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **First Before** 'opened_email'. This will
+add the the first email that the customer opened before their first visit.
+
 ### Last Before ([source](./macros/relationships/append_only/last_before.sql))
 Append the last activity to occur before the primary activity.
 
@@ -338,9 +350,14 @@ Append the first activity to occur after the primary activity.
 
 **Example Usage:**
 
-For the first 'visited_website' append **First After** 'signed_up'. For each
+For the **First Ever** 'visited_website' append **First After** 'signed_up'. For each
 customer add whether or not they converted any time after their first visit to
 the site.
+
+> **Note:** Be catious when using this with **All Ever** for the primary activity.
+> It will result in adding the same **First After** activity to multiple primary
+> activity records, if the appended activity occurred after multiple primary
+> activities. Consider using **First In Between** instead.
 
 ### Last After ([source](./macros/relationships/append_only/last_after.sql))
 Append the last activity to occur after the primary activity.
@@ -349,21 +366,16 @@ Append the last activity to occur after the primary activity.
 - `primary_activity:` ❌
 - `appended_activity:` ✅
 
-**Example Usage:** For the **First Ever** 'visited_website' append **Last
+**Example Usage:**
+
+For the **First Ever** 'visited_website' append **Last
 After** 'returned_item. The most recent time a customer returned an item after
 their first visit.
 
-### First Before ([source](./macros/relationships/append_only/first_before.sql))
-Append the first activity to occur before the primary activity.
-
-**Dataset Usage:**
-- `primary_activity:` ❌
-- `appended_activity:` ✅
-
-**Example Usage:**
-
-For every 'visited_website' append **First Before** 'opened_email'. This will
-add the the first email that the customer opened before their first visit.
+> **Note:** Be catious when using this with **All Ever** for the primary activity.
+> It will result in adding the same **Last After** activity to multiple primary
+> activity records, if the appended activity occurred after multiple primary
+> activities. Consider using **Last In Between** instead.
 
 ### First In Between ([source](./macros/relationships/append_only/first_in_between.sql))
 Append the first activity to occur after each occurrence of the primary
@@ -375,9 +387,32 @@ activity, but before the next occurrence of the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **First In Between** 'completed_order'. On
+For **All Ever** 'visited_website' append **First In Between** 'completed_order'. On
 every website visit, did the customer order before the next visit. (generally
 used for event-based conversion)
+
+> **Note:** The appended activity will be added to the row of the final occurance of the
+> primary activity, even though it is not technically _in between_ another occurance of the
+> primary activity. The generated SQL for the dataset can be filtered further if
+> desired, to remove those rows.
+
+### Last In Between ([source](./macros/relationships/append_only/last_in_between.sql))
+Append the last activity that occurred after each occurrence of the primary
+activity and before the next occurrence of the primary activity.
+
+**Dataset Usage:**
+- `primary_activity:` ❌
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For **All Ever** 'visited_website' append **Last In Between** 'viewed_page'. On every
+website visit, what was the last page that they viewed before leaving.
+
+> **Note:** The appended activity will be added to the row of the final occurance of the
+> primary activity, even though it is not technically _in between_ another occurance of the
+> primary activity. The generated SQL for the dataset can be filtered further if
+> desired, to remove those rows.
 
 ### Aggregate In Between (TODO)
 Append a count of all activities that occurred after each occurrence of the
@@ -405,19 +440,6 @@ primary activity.
 For every 'visited_website' append **Aggregate Before** **Completed Order**. On
 every website visit, sum the revenue that was spent on completed orders before
 this visit.
-
-### Last In Between ([source](./macros/relationships/append_only/last_in_between.sql))
-Append the last activity that occurred after each occurrence of the primary
-activity and before the next occurrence of the primary activity.
-
-**Dataset Usage:**
-- `primary_activity:` ❌
-- `appended_activity:` ✅
-
-**Example Usage:**
-
-For every 'visited_website' append **Last In Between** 'viewed_page'. On every
-website visit, what was the last page that they viewed before leaving.
 
 ## Warehouses
 To the best of the author's knowledge, this package is compatible with all dbt
