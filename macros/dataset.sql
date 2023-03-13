@@ -33,7 +33,9 @@ params:
 {% set columns = dbt_activity_schema.columns() %}
 {% set stream = dbt_activity_schema.generate_stream_alias %}
 {% set alias = dbt_activity_schema.generate_appended_column_alias %}
-{% set render = dbt_activity_schema.render_additional_join_condition %}
+{% set render_join = dbt_activity_schema.render_additional_join_condition %}
+{% set render_agg = dbt_activity_schema.render_aggregation %}
+
 
 with
 
@@ -78,7 +80,7 @@ join_appended_activities as (
             {% endif %}
             )
             -- Additional Join Condition
-            and ( {{ render(activity.additional_join_condition, i) }} )
+            and ( {{ render_join(activity.additional_join_condition, i) }} )
         )
 
     {% endfor %}
@@ -97,9 +99,9 @@ aggregate_appended_activities as (
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
             {% for col in activity.columns %}
 
-        {{ activity.relationship.aggregation_func }}(
-            {{- alias(activity, col) -}}
-        ) as {{ alias(activity, col)}}{% if not (last_outer_loop and loop.last) %},{% endif %}
+        {{ render_agg(activity.relationship.aggregation_func, col, activity) }}
+
+        {% if not (last_outer_loop and loop.last) %},{% endif %}
 
             {% endfor %}
         {% endfor %}
