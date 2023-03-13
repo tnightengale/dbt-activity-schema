@@ -13,8 +13,8 @@
 			"extensions": [
 				"stkb.rewrap",
 				"yzhang.markdown-all-in-one",
-				"ms-toolsai.jupyter",
-				"innoverio.vscode-dbt-power-user"
+				"innoverio.vscode-dbt-power-user",
+				"streetsidesoftware.code-spell-checker"
 			],
 			"settings": {
 				"files.insertFinalNewline": true,
