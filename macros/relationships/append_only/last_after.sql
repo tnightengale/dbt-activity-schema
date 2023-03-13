@@ -5,7 +5,6 @@
 
 (
     {{ stream(i) }}.{{- columns.ts }} > {{ stream() }}.{{- columns.ts }}
-    and {{ stream(i) }}.{{- columns.ts }} <= coalesce({{ stream() }}.{{- columns.activity_repeated_at }}, '2100-01-01'::timestamp)
 )
 {% endmacro %}
 

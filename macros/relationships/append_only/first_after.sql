@@ -5,10 +5,6 @@
 
 (
     {{ stream(i) }}.{{- columns.ts }} > {{ stream() }}.{{- columns.ts }}
-    and (
-        {{ stream(i) }}.{{- columns.ts }} <= {{ stream() }}.{{- columns.activity_repeated_at }}
-        or {{ stream() }}.{{- columns.activity_repeated_at }} is null
-    )
 )
 {% endmacro %}
 
