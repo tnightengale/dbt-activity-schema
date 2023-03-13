@@ -8,11 +8,9 @@
 )
 {% endmacro %}
 
-
 {% macro aggregate_in_before_aggregation_func() %}
-count(distinct {{ caller() }} )
+count(distinct {{ caller() }})
 {% endmacro %}
-
 
 {% macro aggregate_in_before() %}
 

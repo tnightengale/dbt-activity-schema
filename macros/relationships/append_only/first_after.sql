@@ -8,17 +8,11 @@
 )
 {% endmacro %}
 
-
-{% macro first_after_aggregation_func() %}
-min({{ caller() }})
-{% endmacro %}
-
-
 {% macro first_after() %}
 
 {% do return(namespace(
     name="first_after",
-    aggregation_func=dbt_activity_schema.first_after_aggregation_func,
+    aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.first_after_join_clause
 )) %}
 

@@ -4,17 +4,11 @@
 )
 {% endmacro %}
 
-
-{% macro last_ever_aggregation_func() %}
-min({{ caller() }})
-{% endmacro %}
-
-
 {% macro last_ever() %}
 
 {% do return(namespace(
     name="last_ever",
-    aggregation_func=dbt_activity_schema.last_ever_aggregation_func,
+    aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.last_ever_join_clause,
     where_clause=dbt_activity_schema.last_ever_join_clause()
 )) %}

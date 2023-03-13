@@ -8,17 +8,11 @@
 )
 {% endmacro %}
 
-
-{% macro last_after_aggregation_func() %}
-max({{ caller() }})
-{% endmacro %}
-
-
 {% macro last_after() %}
 
 {% do return(namespace(
     name="last_after",
-    aggregation_func=dbt_activity_schema.last_after_aggregation_func,
+    aggregation_func=dbt_activity_schema.max,
     join_clause=dbt_activity_schema.last_after_join_clause
 )) %}
 

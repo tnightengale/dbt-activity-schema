@@ -2,17 +2,11 @@
 (true)
 {% endmacro %}
 
-
-{% macro all_ever_aggregation_func() %}
-min({{ caller() }})
-{% endmacro %}
-
-
 {% macro all_ever() %}
 
 {% do return(namespace(
     name="all_ever",
-    aggregation_func=dbt_activity_schema.all_ever_aggregation_func,
+    aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.all_ever_join_clause,
     where_clause=dbt_activity_schema.all_ever_join_clause()
 )) %}
