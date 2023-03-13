@@ -7,6 +7,7 @@ ENV POETRY_VERSION=1.3.2 \
     PROJECT_DIR=/workspaces/dbt-activity-schema/
 
 RUN apt-get update \
+    && apt-get install -y vim nano \
     && curl -sSL https://install.python-poetry.org | python - \
     && apt-get clean
 
