@@ -1,0 +1,3 @@
+activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,last_in_between_visit_page_activity_id
+3,1,2022-01-02 22:10:11,signed up,,"[{""signed up"": 1}]",0,,1,,7
+9,7,2022-01-08 22:10:11,signed up,,"[{""signed up"": 1}]",0,,1,,13

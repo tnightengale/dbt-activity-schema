@@ -6,3 +6,4 @@ logs/
 .vscode
 .dbt_env
 .venv
+.DS_Store

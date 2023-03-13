@@ -365,7 +365,7 @@ Append the first activity to occur before the primary activity.
 For every 'visited_website' append **First Before** 'opened_email'. This will
 add the the first email that the customer opened before their first visit.
 
-### First In Between (TODO)
+### First In Between ([source](./macros/relationships/append_only/first_in_between.sql))
 Append the first activity to occur after each occurrence of the primary
 activity, but before the next occurrence of the primary activity.
 
@@ -406,7 +406,7 @@ For every 'visited_website' append **Aggregate Before** **Completed Order**. On
 every website visit, sum the revenue that was spent on completed orders before
 this visit.
 
-### Last In Between (TODO)
+### Last In Between ([source](./macros/relationships/append_only/last_in_between.sql))
 Append the last activity that occurred after each occurrence of the primary
 activity and before the next occurrence of the primary activity.
 
