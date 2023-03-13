@@ -117,7 +117,7 @@ expected, the following columns must exist:
   - **`activity_repeated_at`**: The timestamp of the next activity, per
     customer. Create using a lead window function, partitioned by activity and
     customer.
-  - **`activity_occurrence`**: The running count of the actvity per customer.
+  - **`activity_occurrence`**: The running count of the activity per customer.
     Create using a rank window function, partitioned by activity and customer.
 
 #### Mapping Column Names
@@ -161,7 +161,7 @@ vars:
 ...
 ```
 
-These defaults can be overriden using the `override_columns` argument in the
+These defaults can be overridden using the `override_columns` argument in the
 [activity macro](#activity-source).
 
 #### Configure Appended Activity Column Names
@@ -181,7 +181,7 @@ Generate the SQL for self-joining the Activity Stream.
 - **`activity_stream_ref (required)`** :
   [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref)
 
-  The dbt `ref()` that points to the activty stream model.
+  The dbt `ref()` that points to the activity stream model.
 
 - **`primary_activity (required)`** : [activity](#activity-source)
 
@@ -278,7 +278,7 @@ used for an *Appended Activity* is usually applied to a *Primary Activity*.
 Include the nth occurrence of the activity in the dataset.
 
 **args:**
-- **`nth_occurance (required)`** : int
+- **`nth_occurrence (required)`** : int
 
   The occurrence of the activity to include.
 
@@ -354,7 +354,7 @@ For the **First Ever** 'visited_website' append **First After** 'signed_up'. For
 customer add whether or not they converted any time after their first visit to
 the site.
 
-> **Note:** Be catious when using this with **All Ever** for the primary activity.
+> **Note:** Be cautious when using this with **All Ever** for the primary activity.
 > It will result in adding the same **First After** activity to multiple primary
 > activity records, if the appended activity occurred after multiple primary
 > activities. Consider using **First In Between** instead.
@@ -372,7 +372,7 @@ For the **First Ever** 'visited_website' append **Last
 After** 'returned_item. The most recent time a customer returned an item after
 their first visit.
 
-> **Note:** Be catious when using this with **All Ever** for the primary activity.
+> **Note:** Be cautious when using this with **All Ever** for the primary activity.
 > It will result in adding the same **Last After** activity to multiple primary
 > activity records, if the appended activity occurred after multiple primary
 > activities. Consider using **Last In Between** instead.
@@ -391,8 +391,8 @@ For **All Ever** 'visited_website' append **First In Between** 'completed_order'
 every website visit, did the customer order before the next visit. (generally
 used for event-based conversion)
 
-> **Note:** The appended activity will be added to the row of the final occurance of the
-> primary activity, even though it is not technically _in between_ another occurance of the
+> **Note:** The appended activity *will also be added to the row of the final occurrence of the
+> primary activity*, even though it is not technically _in between_ another occurrence of the
 > primary activity. The generated SQL for the dataset can be filtered further if
 > desired, to remove those rows.
 
@@ -409,14 +409,14 @@ activity and before the next occurrence of the primary activity.
 For **All Ever** 'visited_website' append **Last In Between** 'viewed_page'. On every
 website visit, what was the last page that they viewed before leaving.
 
-> **Note:** The appended activity will be added to the row of the final occurance of the
-> primary activity, even though it is not technically _in between_ another occurance of the
+> **Note:** The appended activity *will also be added to the row of the final occurrence of the
+> primary activity*, even though it is not technically _in between_ another occurrence of the
 > primary activity. The generated SQL for the dataset can be filtered further if
 > desired, to remove those rows.
 
 ### Aggregate In Between (TODO)
 Append a count of all activities that occurred after each occurrence of the
-primary activity, but before the next occurrence of the primary activty.
+primary activity, but before the next occurrence of the primary activity.
 
 **Dataset Usage:**
 - `primary_activity:` ❌
