@@ -16,7 +16,7 @@
 
 {% do return(namespace(
     name="last_in_between",
-    aggregation_func="max",
+    aggregation_func=dbt_activity_schema.max,
     join_clause=dbt_activity_schema.last_in_between_join_clause
 )) %}
 

@@ -12,7 +12,7 @@
 
 {% do return(namespace(
     name="last_before",
-    aggregation_func="max",
+    aggregation_func=dbt_activity_schema.max,
     join_clause=dbt_activity_schema.last_before_join_clause
 )) %}
 

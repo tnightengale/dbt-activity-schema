@@ -1,22 +1,19 @@
-{%- macro render_aggregation(aggregation_func, col, activity) -%}
-	{{ return(adapter.dispatch("render_aggregation", "dbt_activity_schema")(aggregation_func, col, activity)) }}
+{%- macro render_aggregation(col, activity) -%}
+	{{ return(adapter.dispatch("render_aggregation", "dbt_activity_schema")(col, activity)) }}
 {%- endmacro -%}
 
 
-{%- macro default__render_aggregation(aggregation_func, col, activity) -%}
+{%- macro default__render_aggregation(col, activity) -%}
 
 {# Render the aggregation, handling special cases for non-cardinal columns.
 
 params:
 
-    aggregation_func: str
-        A valid SQL aggregation function.
-
     col: str
         The column to aggregate.
 
-    activity: str
-        The activity to aggregate.
+    activity: activity (class)
+        The activity class which contains a name and aggregation function.
 
 #}
 
@@ -28,21 +25,23 @@ params:
 {% if col in [columns.feature_json] %}
 
     {% set ts_concat_feature_json %}
-    (
-        {{ aggregation_func }}(
-            {{ dbt.concat([aliased_activity_ts_col, aliased_col]) }}
-        )
-    )
+        {% call activity.relationship.aggregation_func() %}
+        {{ dbt.concat([aliased_activity_ts_col, aliased_col]) }}
+        {% endcall %}
     {% endset %}
 
     {% set ts_aggregated %}
-    {{ aggregation_func }}({{ aliased_activity_ts_col }})
+        {% call activity.relationship.aggregation_func() %}
+        {{ aliased_activity_ts_col }}
+        {% endcall %}
     {% endset %}
 
     {{ dbt_activity_schema.ltrim(ts_concat_feature_json, ts_aggregated) }} as {{ aliased_col }}
 
 {% else %}
-    {{ aggregation_func }}( {{ aliased_col }} ) as {{ aliased_col }}
+    {% call activity.relationship.aggregation_func() %}
+    {{ aliased_col }}
+    {% endcall %} as {{ aliased_col }}
 {% endif %}
 
 {% endmacro %}

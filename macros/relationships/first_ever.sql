@@ -8,7 +8,7 @@
 
 {% do return(namespace(
     name="first_ever",
-    aggregation_func="min",
+    aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.first_ever_join_clause,
     where_clause=dbt_activity_schema.first_ever_join_clause()
 )) %}
