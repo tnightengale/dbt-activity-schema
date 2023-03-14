@@ -16,7 +16,7 @@
 
 {% do return(namespace(
     name="first_in_between",
-    aggregation_func="min",
+    aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.first_in_between_join_clause
 )) %}
 

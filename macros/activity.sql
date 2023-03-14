@@ -73,7 +73,7 @@ params:
 {# The columns.feature_json requires columns.ts to be present. #}
 {% if (dbt_activity_schema.columns().feature_json in columns) and
     (dbt_activity_schema.columns().ts not in columns) %}
-{% set columns = columns.append(dbt_activity_schema.columns().ts) %}
+{% do columns.append(dbt_activity_schema.columns().ts) %}
 {% endif %}
 
 {% set additional_join_condition = additional_join_condition if additional_join_condition else "true" %}

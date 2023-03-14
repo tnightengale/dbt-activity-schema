@@ -23,10 +23,10 @@ params:
         variables in ./dataclasses/columns.sql to set the columns of the activity
         stream.
 
-    primary_activity: primary_activity (/activities)
+    primary_activity: activity (class)
         The primary activity of the derived dataset.
 
-    appended_activities: List[ appended_activity (/activities) ]
+    appended_activities: List[ activity (class) ]
         The list of appended activities to self-join to the primary activity.
 #}
 
@@ -99,7 +99,7 @@ aggregate_appended_activities as (
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
             {% for col in activity.columns %}
 
-        {{ render_agg(activity.relationship.aggregation_func, col, activity) }}
+        {{ render_agg(col, activity) }}
 
         {% if not (last_outer_loop and loop.last) %},{% endif %}
 
