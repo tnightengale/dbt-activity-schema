@@ -18,10 +18,8 @@
 
 params:
 
-    activity_stream_ref: ref()
-        The dbt ref() that points to the activty stream table. Use the project
-        variables in ./dataclasses/columns.sql to set the columns of the activity
-        stream.
+    activity_stream: ref() | str
+        The dbt `ref()` or a CTE name that contains the required columns.
 
     primary_activity: activity (class)
         The primary activity of the derived dataset.
@@ -31,35 +29,42 @@ params:
 #}
 
 {% set columns = dbt_activity_schema.columns() %}
-{% set stream = dbt_activity_schema.generate_stream_alias %}
-{% set alias = dbt_activity_schema.generate_appended_column_alias %}
+{% set stream = dbt_activity_schema.alias_stream %}
+{% set alias_cte = dbt_activity_schema.alias_cte %}
+{% set alias_column = dbt_activity_schema.alias_column %}
+{% set alias_appended_activity = dbt_activity_schema.alias_appended_activity %}
 {% set render_join = dbt_activity_schema.render_additional_join_condition %}
 {% set render_agg = dbt_activity_schema.render_aggregation %}
 
-
 with
 
-join_appended_activities as (
+filter_activity_stream_using_primary_activity as (
     select
-
-        -- Primary Activity Columns
-        {% for col in primary_activity.columns %}
-        {{ stream() }}.{{- col }},
-        {% endfor %}
-
-        -- Appended Activties Columns
-        {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
-            {% for col in activity.columns %}
-
-        {{ stream(i) }}.{{ col }} as {{ alias(activity, col) }}{% if not (last_outer_loop and loop.last) %},{% endif %}
-
-            {% endfor %}
+        {% for col in primary_activity.included_columns + primary_activity.required_columns %}
+        {{ alias_column(col) }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 
     from {{ activity_stream_ref }} as {{ stream() }}
 
-    -- Join Appended Activities Loop
-    {% for activity in appended_activities %}{% set i = loop.index %}
+    where {{ alias_column(columns.activity) }} = {{ dbt.string_literal(primary_activity.name) }}
+        and {{ primary_activity.relationship.where_clause }}
+),
+
+{% for activity in appended_activities %}{% set i = loop.index %}
+
+{{ alias_cte(activity, i) }} as (
+    select
+
+        -- Primary Activity Columns
+        {% for col in primary_activity.included_columns %}
+        {{ stream() }}.{{- col }},
+        {% endfor %}
+
+        {% for col in activity.included_columns %}
+        {{ render_agg(col, activity, i) }}{% if not loop.last %},{% endif %}
+        {% endfor %}
+
+    from filter_activity_stream_using_primary_activity as {{ stream() }}
 
     left join {{ activity_stream_ref }} as {{ stream(i) }}
         on (
@@ -83,36 +88,37 @@ join_appended_activities as (
             and ( {{ render_join(activity.additional_join_condition, i) }} )
         )
 
-    {% endfor %}
-
-    -- Where Clause for the Primary Activity, Determined by the `occurance`
-    where {{ stream() }}.{{ columns.activity }} = {{ dbt.string_literal(primary_activity.name) }}
-        and {{ primary_activity.relationship.where_clause }}
+    group by
+        {% for col in primary_activity.included_columns %}
+        {{ alias_column(col) }}{%- if not loop.last -%},{%- endif %}
+        {% endfor %}
 ),
 
-aggregate_appended_activities as (
+{% endfor %}
+
+rejoin_aggregated_activities as (
     select
-        {% for col in primary_activity.columns %}
-        {{- col }},
+
+        {% for col in primary_activity.included_columns %}
+        {{ alias_column(col) }},
         {% endfor %}
 
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
-            {% for col in activity.columns %}
-
-        {{ render_agg(col, activity) }}
-
-        {% if not (last_outer_loop and loop.last) %},{% endif %}
-
+            {% for col in activity.included_columns %}
+        {{ alias_cte(activity, i) }}.{{ alias_appended_activity(activity, col) }}{% if not (last_outer_loop and loop.last) %},{% endif %}
             {% endfor %}
         {% endfor %}
 
-    from join_appended_activities
-    group by
-        {% for col in primary_activity.columns %}
-        {{- col }}{% if not loop.last %},{% endif %}
-        {% endfor %}
+    from filter_activity_stream_using_primary_activity as {{ stream() }}
+
+    {% for activity in appended_activities %}{% set i = loop.index %}
+
+    left join {{ alias_cte(activity, i) }}
+        on {{ alias_cte(activity, i) }}.{{ columns.activity_id }} = {{ stream() }}.{{ columns.activity_id }}
+
+    {% endfor %}
 )
 
-select * from aggregate_appended_activities
+select * from rejoin_aggregated_activities
 
 {% endmacro %}

@@ -1,28 +1,27 @@
 {% macro activity(
     relationship,
     activity_name,
-    override_columns=[],
-    additional_join_condition=[]
+    included_columns=var("included_columns", var("dbt_activity_schema", {}).get("included_columns", dbt_activity_schema.columns().values())),
+    additional_join_condition="true"
 ) %}
 
-{{ return(adapter.dispatch("appended_activity", "dbt_activity_schema")(
+{{ return(adapter.dispatch("activity", "dbt_activity_schema")(
     relationship,
     activity_name,
-    override_columns,
+    included_columns,
     additional_join_condition
 )) }}
 
 {% endmacro %}
 
-
-{% macro default__appended_activity(
+{% macro default__activity(
     relationship,
     activity_name,
-    override_columns,
+    included_columns,
     additional_join_condition
 ) %}
 
-{# An activity to append to the `primary_activity` in the dataset.
+{# An activity to include in the dataset.
 
 params:
 
@@ -34,9 +33,10 @@ params:
         The string identifier of the activity in the Activity Stream to join to
         the primary activity.
 
-    override_columns: List[str]
-        List of columns to join to the primary activity, defaults to the project
-        var `appended_activity_columns`.
+    included_columns: List[str]
+        List of columns to join to the primary activity, defaults to the
+        `included_columns` vars if it is set, otherwise defaults to the columns
+        defined in columns.sql.
 
     additional_join_condition: str
         A valid sql boolean to condition the join of the appended activity. Can
@@ -62,25 +62,28 @@ params:
         list argument.
 #}
 
-{% if override_columns %}
-    {% set columns = override_columns %}
-{% else %}
-    {% set columns = var("dbt_activity_schema", {}).get(
-        "default_dataset_columns", dbt_activity_schema.columns().values() | list
-    ) %}
-{% endif %}
+{% set columns = dbt_activity_schema.columns() %}
 
-{# The columns.feature_json requires columns.ts to be present. #}
-{% if (dbt_activity_schema.columns().feature_json in columns) and
-    (dbt_activity_schema.columns().ts not in columns) %}
-{% do columns.append(dbt_activity_schema.columns().ts) %}
-{% endif %}
+{# Required for the joins, but not necessarily included in the final result. #}
+{% set required_columns = [
+    columns.activity_id,
+    columns.activity,
+    columns.ts,
+    columns.customer,
+    columns.activity_occurrence,
+    columns.activity_repeated_at
+] %}
 
-{% set additional_join_condition = additional_join_condition if additional_join_condition else "true" %}
+{% for col in included_columns %}
+    {% if col in required_columns %}
+        {% do required_columns.remove(col) %}
+    {% endif %}
+{% endfor %}
 
 {% do return(namespace(
     name = activity_name,
-    columns = columns,
+    included_columns = included_columns,
+    required_columns = required_columns,
     relationship = relationship,
     additional_join_condition = additional_join_condition
 )) %}

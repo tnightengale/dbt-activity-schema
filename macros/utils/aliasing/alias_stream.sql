@@ -1,9 +1,9 @@
-{% macro generate_stream_alias(i=none) %}
-	{{ return(adapter.dispatch("generate_stream_alias", "dbt_activity_schema")(i))}}
+{% macro alias_stream(i=none) %}
+	{{ return(adapter.dispatch("alias_stream", "dbt_activity_schema")(i))}}
 {% endmacro %}
 
 
-{%- macro default__generate_stream_alias(i) -%}
+{%- macro default__alias_stream(i) -%}
 
 {# Generate the alias for the stream and it's appended activities.
 
@@ -16,10 +16,14 @@ params:
 
 #}
 
+{% set alias %}
 {%- if i -%}
 stream_{{- i }}
 {%- else -%}
 stream
 {%- endif -%}
+{% endset %}
+
+{% do return(alias) %}
 
 {%- endmacro -%}

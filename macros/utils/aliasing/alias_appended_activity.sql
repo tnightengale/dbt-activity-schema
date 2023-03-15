@@ -1,20 +1,20 @@
-{% macro generate_appended_column_alias(activity, column_name) %}
-	{{ return(adapter.dispatch("generate_appended_column_alias", "dbt_activity_schema")(activity, column_name))}}
+{% macro alias_appended_activity(activity, column_name) %}
+	{{ return(adapter.dispatch("alias_appended_activity", "dbt_activity_schema")(activity, column_name))}}
 {% endmacro %}
 
 
-{% macro default__generate_appended_column_alias(activity, column_name) %}
+{% macro default__alias_appended_activity(activity, column_name) %}
 
 {# Generate the name of appended columns in `dataset.sql`.
 
 params:
 
-    activity: appended_activity (activites)
+    activity: activity (class)
         The appended activity object, containing the string attributes to be concatenated in the
         column alias prefix.
 
     column_name: str
-        The name of the column that will be concatenated in the column alias suffix.
+        The name of the column that will be aliased.
 #}
 
 {% set concatenated_activity_alias %}

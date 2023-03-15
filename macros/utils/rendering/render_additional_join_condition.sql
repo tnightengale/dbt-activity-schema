@@ -23,8 +23,8 @@ params:
 
 {%- do return(
     clause.format(
-        primary=dbt_activity_schema.generate_stream_alias(),
-        appended=dbt_activity_schema.generate_stream_alias(i)
+        primary=dbt_activity_schema.alias_stream(),
+        appended=dbt_activity_schema.alias_stream(i)
     )
 ) -%}
 
