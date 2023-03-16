@@ -1,6 +1,6 @@
 {% macro first_after_join_clause(i) %}
 
-{% set stream = dbt_activity_schema.generate_stream_alias %}
+{% set stream = dbt_activity_schema.alias_stream %}
 {% set columns = dbt_activity_schema.columns() %}
 
 (

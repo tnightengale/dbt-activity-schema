@@ -1,6 +1,6 @@
 {% macro nth_ever_join_clause(nth_occurance, i=none) %}
 (
-    {{ dbt_activity_schema.generate_stream_alias(i) }}.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ nth_occurance }}
+    {{ dbt_activity_schema.alias_stream(i) }}.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ nth_occurance }}
 )
 {% endmacro %}
 

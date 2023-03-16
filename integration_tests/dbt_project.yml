@@ -21,12 +21,12 @@ models:
 
 vars:
   dbt_activity_schema:
-    default_dataset_columns:
+    included_columns:
       - activity_id
       - entity_uuid
       - ts
       - revenue_impact
-    activity_schema_v2_column_mappings:
+    column_mappings:
       customer: entity_uuid
       anonymous_customer_id: anonymous_entity_uuid
 

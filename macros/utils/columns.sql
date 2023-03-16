@@ -20,9 +20,8 @@
     )
 %}
 
-{# Update names using the `activity_schema_v2_column_mappings` project but keep keys according to
-the Activity Schema V2 specification. #}
-{% do column_names.update(var("dbt_activity_schema", {}).get("activity_schema_v2_column_mappings", {})) %}
+{# Update names using the `column_mappings` project var. #}
+{% do column_names.update(var("column_mappings", var("dbt_activity_schema", {}).get("column_mappings", {}))) %}
 
 {% do return(column_names) %}
 
