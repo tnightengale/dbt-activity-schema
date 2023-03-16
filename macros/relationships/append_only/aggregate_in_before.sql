@@ -8,15 +8,11 @@
 )
 {% endmacro %}
 
-{% macro aggregate_in_before_aggregation_func() %}
-count(distinct {{ caller() }})
-{% endmacro %}
-
-{% macro aggregate_in_before() %}
+{% macro aggregate_in_before(aggregation_func=dbt_activity_schema.count) %}
 
 {% do return(namespace(
     name="aggregate_in_before",
-    aggregation_func=dbt_activity_schema.aggregate_in_before_aggregation_func,
+    aggregation_func=aggregation_func,
     join_clause=dbt_activity_schema.aggregate_in_before_join_clause
 )) %}
 
