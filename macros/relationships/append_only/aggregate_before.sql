@@ -1,4 +1,4 @@
-{% macro aggregate_in_before_join_clause(i) %}
+{% macro aggregate_before_join_clause(i) %}
 
 {% set stream = dbt_activity_schema.alias_stream %}
 {% set columns = dbt_activity_schema.columns() %}
@@ -8,12 +8,12 @@
 )
 {% endmacro %}
 
-{% macro aggregate_in_before(aggregation_func=dbt_activity_schema.count) %}
+{% macro aggregate_before(aggregation_func=dbt_activity_schema.count) %}
 
 {% do return(namespace(
-    name="aggregate_in_before",
+    name="aggregate_before",
     aggregation_func=aggregation_func,
-    join_clause=dbt_activity_schema.aggregate_in_before_join_clause
+    join_clause=dbt_activity_schema.aggregate_before_join_clause
 )) %}
 
 {% endmacro %}
