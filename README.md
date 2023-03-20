@@ -30,8 +30,12 @@ modelling framework, based on the
   - [Last After (source)](#last-after-source)
   - [First In Between (source)](#first-in-between-source)
   - [Last In Between (source)](#last-in-between-source)
-  - [Aggregate In Between (TODO)](#aggregate-in-between-todo)
-  - [Aggregate In Before (TODO)](#aggregate-in-before-todo)
+  - [Aggregate All Ever (source) (*Custom*)](#aggregate-all-ever-source-custom)
+  - [Aggregate After (source) (*Custom*)](#aggregate-after-source-custom)
+  - [Aggregate Before (source)](#aggregate-before-source)
+  - [Aggregate In Between (source)](#aggregate-in-between-source)
+- [Aggregations](#aggregations)
+  - [Custom Aggregations](#custom-aggregations)
 - [Warehouses](#warehouses)
 - [Contributions](#contributions)
 
@@ -70,10 +74,9 @@ https://github.com/tnightengale/dbt-activity-schema/releases.
 Use the [dataset macro](#dataset-source) to self-join an Activity Stream using
 [relationships](#relationships).
 
-The
-[dataset macro](#dataset-source) will compile based on the provided [activity
-macros](#activity-source) and the [relationship macros](#relationships). It
-can then be nested in a CTE in a dbt-Core model. Eg:
+The [dataset macro](#dataset-source) will compile based on the provided
+[activity macros](#activity-source) and the [relationship
+macros](#relationships). It can then be nested in a CTE in a dbt-Core model. Eg:
 ```c
 // my_first_dataset.sql
 
@@ -166,8 +169,9 @@ If it is not set, all the columns from the [V2
 Specification](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#entity-table)
 will be included, based on the [columns macro](./macros/utils/columns.sql).
 
-These defaults can be overridden on a per-activity basis by passing a list of column names to the `included_columns` argument in the
-[activity macro](#activity-source).
+These defaults can be overridden on a per-activity basis by passing a list of
+column names to the `included_columns` argument in the [activity
+macro](#activity-source).
 
 ## Macros
 
@@ -178,7 +182,8 @@ Generate the SQL for self-joining the Activity Stream.
 - **`activity_stream (required)`** :
   [ref](https://docs.getdbt.com/reference/dbt-jinja-functions/ref) | str
 
-  The dbt `ref()` or a CTE name that contains the [required columns](#required-columns).
+  The dbt `ref()` or a CTE name that contains the [required
+  columns](#required-columns).
 
 - **`primary_activity (required)`** : [activity](#activity-source)
 
@@ -347,14 +352,14 @@ Append the first activity to occur after the primary activity.
 
 **Example Usage:**
 
-For the **First Ever** 'visited_website' append **First After** 'signed_up'. For each
-customer add whether or not they converted any time after their first visit to
-the site.
+For the **First Ever** 'visited_website' append **First After** 'signed_up'. For
+each customer add whether or not they converted any time after their first visit
+to the site.
 
-> **Note:** Be cautious when using this with **All Ever** for the primary activity.
-> It will result in adding the same **First After** activity to multiple primary
-> activity records, if the appended activity occurred after multiple primary
-> activities. Consider using **First In Between** instead.
+> **Note:** Be cautious when using this with **All Ever** for the primary
+> activity. It will result in adding the same **First After** activity to
+> multiple primary activity records, if the appended activity occurred after
+> multiple primary activities. Consider using **First In Between** instead.
 
 ### Last After ([source](./macros/relationships/append_only/last_after.sql))
 Append the last activity to occur after the primary activity.
@@ -365,14 +370,13 @@ Append the last activity to occur after the primary activity.
 
 **Example Usage:**
 
-For the **First Ever** 'visited_website' append **Last
-After** 'returned_item. The most recent time a customer returned an item after
-their first visit.
+For the **First Ever** 'visited_website' append **Last After** 'returned_item.
+The most recent time a customer returned an item after their first visit.
 
-> **Note:** Be cautious when using this with **All Ever** for the primary activity.
-> It will result in adding the same **Last After** activity to multiple primary
-> activity records, if the appended activity occurred after multiple primary
-> activities. Consider using **Last In Between** instead.
+> **Note:** Be cautious when using this with **All Ever** for the primary
+> activity. It will result in adding the same **Last After** activity to
+> multiple primary activity records, if the appended activity occurred after
+> multiple primary activities. Consider using **Last In Between** instead.
 
 ### First In Between ([source](./macros/relationships/append_only/first_in_between.sql))
 Append the first activity to occur after each occurrence of the primary
@@ -384,14 +388,14 @@ activity, but before the next occurrence of the primary activity.
 
 **Example Usage:**
 
-For **All Ever** 'visited_website' append **First In Between** 'completed_order'. On
-every website visit, did the customer order before the next visit. (generally
-used for event-based conversion)
+For **All Ever** 'visited_website' append **First In Between**
+'completed_order'. On every website visit, did the customer order before the
+next visit. (generally used for event-based conversion)
 
-> **Note:** The appended activity *will also be added to the row of the final occurrence of the
-> primary activity*, even though it is not technically _in between_ another occurrence of the
-> primary activity. The generated SQL for the dataset can be filtered further if
-> desired, to remove those rows.
+> **Note:** The appended activity *will also be added to the row of the final
+> occurrence of the primary activity*, even though it is not technically _in
+> between_ another occurrence of the primary activity. The generated SQL for the
+> dataset can be filtered further if desired, to remove those rows.
 
 ### Last In Between ([source](./macros/relationships/append_only/last_in_between.sql))
 Append the last activity that occurred after each occurrence of the primary
@@ -403,17 +407,24 @@ activity and before the next occurrence of the primary activity.
 
 **Example Usage:**
 
-For **All Ever** 'visited_website' append **Last In Between** 'viewed_page'. On every
-website visit, what was the last page that they viewed before leaving.
+For **All Ever** 'visited_website' append **Last In Between** 'viewed_page'. On
+every website visit, what was the last page that they viewed before leaving.
 
-> **Note:** The appended activity *will also be added to the row of the final occurrence of the
-> primary activity*, even though it is not technically _in between_ another occurrence of the
-> primary activity. The generated SQL for the dataset can be filtered further if
-> desired, to remove those rows.
+> **Note:** The appended activity *will also be added to the row of the final
+> occurrence of the primary activity*, even though it is not technically _in
+> between_ another occurrence of the primary activity. The generated SQL for the
+> dataset can be filtered further if desired, to remove those rows.
 
-### Aggregate In Between (TODO)
-Append a count of all activities that occurred after each occurrence of the
-primary activity, but before the next occurrence of the primary activity.
+### Aggregate All Ever ([source](./macros/relationships/append_only/aggregate_all_ever.sql)) (*Custom*)
+Append a count of all activities that occurred that can be linked by the
+`customer` [required column](#required-columns) to a primary activity.
+
+**args:**
+- **`aggregation_func (optional)`** : [aggregation](#aggregations)
+
+  The aggregation macro to use on the columns passed to the
+  [activity](#activity-source). See [aggregations](#aggregations) for details on
+  how to create a custom aggregation to pass here.
 
 **Dataset Usage:**
 - `primary_activity:` ❌
@@ -421,12 +432,40 @@ primary activity, but before the next occurrence of the primary activity.
 
 **Example Usage:**
 
-For every 'visited_website' append **Aggregate In Between** 'viewed_page'. On
-every website visit, count the number of pages before the next visit.
+For every 'sign up' append **Aggregate All Ever** **Completed Order**. On every
+verified/signed up account, get the count of total orders placed.
 
-### Aggregate In Before (TODO)
+### Aggregate After ([source](./macros/relationships/append_only/aggregate_after.sql)) (*Custom*)
+Append a count of all activities that occurred after each occurrence of the
+primary activity.
+
+**args:**
+- **`aggregation_func (optional)`** : [aggregation](#aggregations)
+
+  The aggregation macro to use on the columns passed to the
+  [activity](#activity-source). See [aggregations](#aggregations) for details on
+  how to create a custom aggregation to pass here.
+
+**Dataset Usage:**
+- `primary_activity:` ❌
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **Aggregate After** **Completed Order**. On
+every website visit, sum the revenue that was spent on completed orders after
+this visit.
+
+### Aggregate Before ([source](.macros/relationships/../../macros/relationships/append_only/aggregate_before.sql))
 Append a count of all activities that occurred before each occurrence of the
 primary activity.
+
+**args:**
+- **`aggregation_func (optional)`** : [aggregation](#aggregations)
+
+  The aggregation macro to use on the columns passed to the
+  [activity](#activity-source). See [aggregations](#aggregations) for details on
+  how to create a custom aggregation to pass here.
 
 **Dataset Usage:**
 - `primary_activity:` ❌
@@ -437,6 +476,54 @@ primary activity.
 For every 'visited_website' append **Aggregate Before** **Completed Order**. On
 every website visit, sum the revenue that was spent on completed orders before
 this visit.
+
+### Aggregate In Between ([source](./macros/relationships/append_only/aggregate_in_between.sql))
+Append a count of all activities that occurred after each occurrence of the
+primary activity, but before the next occurrence of the primary activity.
+
+**args:**
+- **`aggregation_func (optional)`** : [aggregation](#aggregations)
+
+  The aggregation macro to use on the columns passed to the
+  [activity](#activity-source). See [aggregations](#aggregations) for details on
+  how to create a custom aggregation to pass here.
+
+**Dataset Usage:**
+- `primary_activity:` ❌
+- `appended_activity:` ✅
+
+**Example Usage:**
+
+For every 'visited_website' append **Aggregate In Between** 'viewed_page'. On
+every website visit, count the number of pages before the next visit.
+
+## Aggregations
+Each of the [relationships](#relationships) relies on an aggregation function,
+located [here](./macros/utils/aggregations/).
+
+These aggregations use the
+[call](https://jinja.palletsprojects.com/en/3.1.x/templates/#call) function of
+Jinja Templates, to allow complex expressions to be passed into the function.
+
+### Custom Aggregations
+To create a custom aggregation, simply define a valid SQL aggregation function
+in a macro and pass it to any of the aggregation relationships. Eg:
+```jinja
+{% macro custom_agg() %}
+
+sum(
+  case
+    when {{ caller }} is not null
+      then 10
+    else 1
+  end
+)
+
+{% endmacro %}
+```
+
+In the example above `{{ caller() }}` will be replaced with each of the columns
+passed to the [activity](#activity-source).
 
 ## Warehouses
 To the best of the author's knowledge, this package is compatible with all dbt
