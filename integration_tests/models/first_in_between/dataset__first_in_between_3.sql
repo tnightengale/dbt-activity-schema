@@ -30,6 +30,7 @@
                 dbt_activity_schema.first_in_between(),
                 "bought something",
                 [
+                    "revenue_impact",
                     "activity_id",
                     "ts"
                 ]
