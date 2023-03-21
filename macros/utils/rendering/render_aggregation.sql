@@ -21,7 +21,11 @@ params:
 #}
 
 {% set columns = dbt_activity_schema.columns() %}
-{% set qualified_col = dbt_activity_schema.alias_column(column_name, i) %}
+
+{% set qualified_col %}
+dbt_activity_schema.appneded().{{ column_name }}
+{% endset %}
+
 {% set alias = dbt_activity_schema.alias_appended_activity(activity, column_name) %}
 
 {# Handle non-cardinal aggregations by prepending ts column, aggregating, then trimming. #}

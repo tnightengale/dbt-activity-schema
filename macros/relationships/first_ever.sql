@@ -1,6 +1,6 @@
 {% macro first_ever_join_clause(i=none) %}
 (
-    {{ dbt_activity_schema.alias_stream(i) }}.{{ dbt_activity_schema.columns().activity_occurrence }} = 1
+    {{ dbt_activity_schema.stream() }}.{{ dbt_activity_schema.columns().activity_occurrence }} = 1
 )
 {% endmacro %}
 

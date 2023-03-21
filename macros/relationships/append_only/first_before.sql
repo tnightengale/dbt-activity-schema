@@ -1,11 +1,12 @@
 {% macro first_before_join_clause(i) %}
 
-{% set stream = dbt_activity_schema.alias_stream %}
+{% set stream = dbt_activity_schema.stream %}
 {% set columns = dbt_activity_schema.columns() %}
+{% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ stream(i) }}.{{ columns.activity_occurrence }} = 1
-    and {{ stream(i) }}.{{- columns.ts }} <= coalesce({{ stream() }}.{{- columns.activity_repeated_at }}, '2100-01-01'::timestamp)
+    {{ appended() }}.{{ columns.activity_occurrence }} = 1
+    and {{ appended() }}.{{- columns.ts }} <= coalesce({{ stream() }}.{{- columns.activity_repeated_at }}, '2100-01-01'::timestamp)
 )
 {% endmacro %}
 
