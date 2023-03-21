@@ -16,17 +16,24 @@ params:
         The activity class which contains a name and aggregation function.
 
     i: int
-        The cardinality of the appended activity. Used to fully qualify the
-        appended activity columns with an alias used in the join of dataset.sql.
+        The ordinality of the appended activity in the list of all appended
+        activities. Used to fully qualify the appended activity columns with an
+        alias in the joins of dataset.sql.
 #}
 
 {% set columns = dbt_activity_schema.columns() %}
 {% set qualified_col = dbt_activity_schema.alias_column(column_name, i) %}
 {% set alias = dbt_activity_schema.alias_appended_activity(activity, column_name) %}
 
-{# Handle non-cardinal aggregations by prepending ts column, aggregating, then trimming. #}
+{#
+    Handle min, max aggregations by prepending ts column, aggregating, then
+    trimming. See here for details: https://tinyurl.com/36fuzjkd
+#}
+
 {% set aggregation %}
-{% if column_name in [columns.feature_json] %}
+{# {{ print(activity.relationship.aggregation_func) }} #}
+{% if activity.relationship.aggregation_func in [dbt_activity_schema.min, dbt_activity_schema.max] %}
+    {{ print("if triggered") }}
 
     {% set qualified_ts_col = dbt_activity_schema.alias_column(columns.ts, i) %}
     {% set ts_concat_feature_json %}
@@ -45,6 +52,7 @@ params:
 
 {# Aggregate cardinal columns normally. #}
 {% else %}
+    {{ print("else triggered") }}
     {% call activity.relationship.aggregation_func() %}
     {{ qualified_col }}
     {% endcall %} as {{ alias }}
