@@ -1,15 +1,15 @@
 {% macro dataset(
-    activity_stream_ref,
+    activity_stream,
     primary_activity,
     appended_activities=[]
 ) %} {{ return(adapter.dispatch("dataset", "dbt_activity_schema")(
-    activity_stream_ref,
+    activity_stream,
     primary_activity,
     appended_activities
 )) }} {% endmacro %}
 
 {% macro default__dataset(
-    activity_stream_ref,
+    activity_stream,
     primary_activity,
     appended_activities
 ) %}
@@ -44,7 +44,7 @@ filter_activity_stream_using_primary_activity as (
         {{ alias_column(col) }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 
-    from {{ activity_stream_ref }} as {{ stream() }}
+    from {{ activity_stream }} as {{ stream() }}
 
     where {{ alias_column(columns.activity) }} = {{ dbt.string_literal(primary_activity.name) }}
         and {{ primary_activity.relationship.where_clause }}
@@ -66,7 +66,7 @@ filter_activity_stream_using_primary_activity as (
 
     from filter_activity_stream_using_primary_activity as {{ stream() }}
 
-    left join {{ activity_stream_ref }} as {{ stream(i) }}
+    left join {{ activity_stream }} as {{ stream(i) }}
         on (
             -- Join on Customer UUID Column
             {{ stream(i) }}.{{ columns.customer }} = {{ stream() }}.{{ columns.customer }}
