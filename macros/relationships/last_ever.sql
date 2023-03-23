@@ -1,6 +1,6 @@
-{% macro last_ever_join_clause(i=none) %}
+{% macro last_ever_join_clause(alias=dbt_activity_schema.appended()) %}
 (
-    {{ dbt_activity_schema.alias_stream(i) }}.{{ dbt_activity_schema.columns().activity_repeated_at }} is null
+    {{ alias }}.{{ dbt_activity_schema.columns().activity_repeated_at }} is null
 )
 {% endmacro %}
 
@@ -10,7 +10,7 @@
     name="last_ever",
     aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.last_ever_join_clause,
-    where_clause=dbt_activity_schema.last_ever_join_clause()
+    where_clause=dbt_activity_schema.last_ever_join_clause(dbt_activity_schema.primary())
 )) %}
 
 {% endmacro %}

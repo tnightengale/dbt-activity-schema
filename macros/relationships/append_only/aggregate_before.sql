@@ -1,10 +1,11 @@
 {% macro aggregate_before_join_clause(i) %}
 
-{% set stream = dbt_activity_schema.alias_stream %}
+{% set primary = dbt_activity_schema.primary %}
 {% set columns = dbt_activity_schema.columns() %}
+{% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ stream(i) }}.{{- columns.ts }} < {{ stream() }}.{{- columns.ts }}
+    {{ appended() }}.{{- columns.ts }} < {{ primary() }}.{{- columns.ts }}
 )
 {% endmacro %}
 

@@ -77,7 +77,7 @@ Use the [dataset macro](#dataset-source) to self-join an Activity Stream using
 The [dataset macro](#dataset-source) will compile based on the provided
 [activity macros](#activity-source) and the [relationship
 macros](#relationships). It can then be nested in a CTE in a dbt-Core model. Eg:
-```c
+```sql
 // my_first_dataset.sql
 
 with
@@ -218,28 +218,51 @@ dataset.
 
 - **`additional_join_condition (optional)`** : str
 
-  A valid SQL boolean to condition the join of the appended activity. Can
-  optionally contain the python f-string placeholders `{primary}` and
-  `{appended}` in the string. These placeholders will be compiled by the
-  [dataset macro](./macros/dataset.sql) with the correct SQL aliases for the
-  joins between the primary activity and the appended activity.
+  A valid sql boolean expression that is added to the join condition of the
+  appended activity. The expression is an `and` with the condition created by
+  the [relationship](#relationships).
 
-  Eg:
-  ```python
-  "json_extract({primary}.feature_json, 'dim1') =
-      json_extract({appended}.feature_json, 'dim1')"
-  ```
-  The `{primary}` and `{appended}` placeholders compile according to the
-  cardinality of the activity in the `appended_activities` list argument to
-  `dataset.sql`.
+  The expression can optionally contain either or both of the `{{ primary() }}`
+  and `{{ appended() }}` macros, which are used to alias the primary and
+  appended activities respectively. If using these aliases in the expression, it
+  must be first assigned to a set block. Eg:
 
-  Compiled:
-  ```python
-  "json_extract(stream.feature_json, 'dim1') =
-      json_extract(stream_3.feature_json, 'dim1')"
+  ```sql
+  // my_second_dataset.sql
+
+  {% set join_condition %}
+  json_extract({{ dbt_activity_schema.primary() }}.feature_json, 'type')
+  = json_extract({{ dbt_activity_schema.appended() }}.feature_json, 'type')
+  {% endset %}
+
+
+  {{
+      dbt_activity_schema.dataset(
+          ref("activity_schema"),
+          dbt_activity_schema.activity(
+              dbt_activity_schema.all_ever(),
+              "signed up"
+          ),
+          [
+              dbt_activity_schema.activity(
+                  dbt_activity_schema.first_after(),
+                  "visit page",
+                  additional_join_condition=join_condition
+              )
+          ]
+      )
+  }}
+
   ```
-  Given that the appended activity was 3rd in the `appended_activities` list
-  argument.
+
+  The `{{ primary() }}` and `{{ appended() }}` placeholders are constants for
+  the aliases used in the joins of the [dataset macro](#dataset-source). Columns
+  used in the expression must be fully qualified with these aliases.
+
+  In the above example, the value of the `type` key in the `feature_json` of the
+  primary activity `feature_json` must match the value of the `type` key in the
+  `feature_json` of the appended activity, in addition to the relationship join
+  conditions.
 
 ## Relationships
 In the Activity Schema framework,

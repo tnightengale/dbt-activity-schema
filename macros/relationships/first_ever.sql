@@ -1,6 +1,6 @@
-{% macro first_ever_join_clause(i=none) %}
+{% macro first_ever_join_clause(alias=dbt_activity_schema.appended()) %}
 (
-    {{ dbt_activity_schema.alias_stream(i) }}.{{ dbt_activity_schema.columns().activity_occurrence }} = 1
+    {{ alias }}.{{ dbt_activity_schema.columns().activity_occurrence }} = 1
 )
 {% endmacro %}
 
@@ -10,7 +10,7 @@
     name="first_ever",
     aggregation_func=dbt_activity_schema.min,
     join_clause=dbt_activity_schema.first_ever_join_clause,
-    where_clause=dbt_activity_schema.first_ever_join_clause()
+    where_clause=dbt_activity_schema.first_ever_join_clause(dbt_activity_schema.primary())
 )) %}
 
 {% endmacro %}

@@ -20,7 +20,7 @@ params:
 #}
 
 {% set alias %}
-{{ dbt_activity_schema.alias_stream(i) }}.{{ column_name }}
+{{ dbt_activity_schema.appended() }}.{{ column_name }}
 {% endset %}
 
 {% do return(alias) %}
