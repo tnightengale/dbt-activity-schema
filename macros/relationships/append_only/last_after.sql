@@ -1,11 +1,11 @@
 {% macro last_after_join_clause(i) %}
 
-{% set stream = dbt_activity_schema.stream %}
+{% set primary = dbt_activity_schema.primary %}
 {% set columns = dbt_activity_schema.columns() %}
 {% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ appended() }}.{{- columns.ts }} > {{ stream() }}.{{- columns.ts }}
+    {{ appended() }}.{{- columns.ts }} > {{ primary() }}.{{- columns.ts }}
 )
 {% endmacro %}
 

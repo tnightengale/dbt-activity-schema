@@ -1,14 +1,14 @@
 {% macro first_in_between_join_clause(i) %}
 
-{% set stream = dbt_activity_schema.stream %}
+{% set primary = dbt_activity_schema.primary %}
 {% set columns = dbt_activity_schema.columns() %}
 {% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ appended() }}.{{- columns.ts }} > {{ stream() }}.{{- columns.ts }}
+    {{ appended() }}.{{- columns.ts }} > {{ primary() }}.{{- columns.ts }}
     and (
-        {{ appended() }}.{{- columns.ts }} <= {{ stream() }}.{{- columns.activity_repeated_at }}
-        or {{ stream() }}.{{- columns.activity_repeated_at }} is null
+        {{ appended() }}.{{- columns.ts }} <= {{ primary() }}.{{- columns.activity_repeated_at }}
+        or {{ primary() }}.{{- columns.activity_repeated_at }} is null
     )
 )
 {% endmacro %}

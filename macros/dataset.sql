@@ -29,7 +29,7 @@ params:
 #}
 
 {% set columns = dbt_activity_schema.columns() %}
-{% set stream = dbt_activity_schema.stream %}
+{% set primary = dbt_activity_schema.primary %}
 {% set appended = dbt_activity_schema.appended %}
 {% set alias_cte = dbt_activity_schema.alias_cte %}
 {% set alias_column = dbt_activity_schema.alias_column %}
@@ -42,12 +42,12 @@ with
 filter_activity_stream_using_primary_activity as (
     select
         {% for col in primary_activity.included_columns + primary_activity.required_columns %}
-        {{ stream() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
+        {{ primary() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 
-    from {{ activity_stream }} as {{ stream() }}
+    from {{ activity_stream }} as {{ primary() }}
 
-    where {{ stream() }}.{{ columns.activity }} = {{ dbt.string_literal(primary_activity.name) }}
+    where {{ primary() }}.{{ columns.activity }} = {{ dbt.string_literal(primary_activity.name) }}
         and {{ primary_activity.relationship.where_clause }}
 ),
 
@@ -58,7 +58,7 @@ filter_activity_stream_using_primary_activity as (
 
         -- Primary Activity Columns
         {% for col in primary_activity.included_columns %}
-        {{ stream() }}.{{- col }},
+        {{ primary() }}.{{- col }},
         {% endfor %}
 
         {% for col in activity.included_columns %}
@@ -68,12 +68,12 @@ filter_activity_stream_using_primary_activity as (
             {% if not loop.last %},{% endif %}
         {% endfor %}
 
-    from filter_activity_stream_using_primary_activity as {{ stream() }}
+    from filter_activity_stream_using_primary_activity as {{ primary() }}
 
     left join {{ activity_stream }} as {{ appended() }}
         on (
             -- Join on Customer UUID Column
-            {{ appended() }}.{{ columns.customer }} = {{ stream() }}.{{ columns.customer }}
+            {{ appended() }}.{{ columns.customer }} = {{ primary() }}.{{ columns.customer }}
 
             -- Join the Correct Activity
             and {{ appended() }}.{{- columns.activity }} = {{ dbt.string_literal(activity.name) }}
@@ -89,12 +89,12 @@ filter_activity_stream_using_primary_activity as (
             {% endif %}
             )
             -- Additional Join Condition
-            and ( {{ render_join(activity.additional_join_condition, i) }} )
+            and ( {{ activity.additional_join_condition }} )
         )
 
     group by
         {% for col in primary_activity.included_columns %}
-        {{ stream() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
+        {{ primary() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 ),
 
@@ -104,7 +104,7 @@ rejoin_aggregated_activities as (
     select
 
         {% for col in primary_activity.included_columns %}
-        {{ stream() }}.{{ col }},
+        {{ primary() }}.{{ col }},
         {% endfor %}
 
         {% for activity in appended_activities %}{% set i = loop.index %}{% set last_outer_loop = loop.last %}
@@ -113,12 +113,12 @@ rejoin_aggregated_activities as (
             {% endfor %}
         {% endfor %}
 
-    from filter_activity_stream_using_primary_activity as {{ stream() }}
+    from filter_activity_stream_using_primary_activity as {{ primary() }}
 
     {% for activity in appended_activities %}{% set i = loop.index %}
 
     left join {{ alias_cte(activity, i) }}
-        on {{ alias_cte(activity, i) }}.{{ columns.activity_id }} = {{ stream() }}.{{ columns.activity_id }}
+        on {{ alias_cte(activity, i) }}.{{ columns.activity_id }} = {{ primary() }}.{{ columns.activity_id }}
 
     {% endfor %}
 )

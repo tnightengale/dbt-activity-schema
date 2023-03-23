@@ -1,4 +1,4 @@
-{% macro stream() %}
+{% macro primary() %}
 
 {% do return("stream") %}
 

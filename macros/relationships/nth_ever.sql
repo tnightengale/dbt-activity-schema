@@ -1,6 +1,6 @@
-{% macro nth_ever_join_clause(nth_occurance, i=none) %}
+{% macro nth_ever_join_clause(nth_occurance, alias=dbt_activity_schema.appended()) %}
 (
-    {{ dbt_activity_schema.stream() }}.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ nth_occurance }}
+    {{ alias }}.{{ dbt_activity_schema.columns().activity_occurrence }} = {{ nth_occurance }}
 )
 {% endmacro %}
 
@@ -11,7 +11,7 @@
     aggregation_func=dbt_activity_schema.min,
     nth_occurance=nth_occurance,
     join_clause=dbt_activity_schema.nth_ever_join_clause,
-    where_clause=dbt_activity_schema.nth_ever_join_clause(nth_occurance)
+    where_clause=dbt_activity_schema.nth_ever_join_clause(nth_occurance, dbt_activity_schema.primary())
 )) %}
 
 {% endmacro %}

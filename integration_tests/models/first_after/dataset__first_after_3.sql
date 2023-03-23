@@ -1,3 +1,8 @@
+{% set join_condition %}
+json_extract({{ dbt_activity_schema.primary() }}.feature_json, 'type')
+= json_extract({{ dbt_activity_schema.appended() }}.feature_json, 'type')
+{% endset %}
+
 {{
     dbt_activity_schema.dataset(
         ref("input__first_after"),
@@ -21,10 +26,7 @@
                     "activity_occurrence",
                     "ts"
                 ],
-                additional_join_condition="
-                json_extract({primary}.feature_json, 'type')
-                = json_extract({appended}.feature_json, 'type')
-                "
+                additional_join_condition=join_condition
             )
         ]
     )
