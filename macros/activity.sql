@@ -1,7 +1,8 @@
 {% macro activity(
     relationship,
     activity_name,
-    included_columns=var("included_columns", var("dbt_activity_schema", {}).get("included_columns", dbt_activity_schema.columns().values())),
+    included_columns=var("included_columns", var("dbt_activity_schema",
+    {}).get("included_columns", dbt_activity_schema.columns().values() | list)),
     additional_join_condition="true"
 ) %}
 

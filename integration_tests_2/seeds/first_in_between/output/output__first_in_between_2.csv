@@ -1,9 +1,0 @@
-activity_id,entity_uuid,ts,revenue_impact,first_in_between_bought_something_feature_json,first_in_between_bought_something_ts,first_in_between_bought_something_revenue_impact
-11,1,2022-01-01 22:10:11,0,,,
-33,1,2022-01-03 22:10:11,0,,,
-44,1,2022-01-04 22:10:11,0,"{""type"": 1}",2022-01-05 22:10:11,100.000000
-77,1,2022-01-06 22:10:11,0,,,
-88,7,2022-01-07 22:10:11,0,,,
-1010,7,2022-01-09 22:10:11,0,,,
-1111,7,2022-01-10 22:10:11,0,"{""type"": 1}",2022-01-11 22:10:11,100.000000
-1414,7,2022-01-12 22:10:11,0,,,

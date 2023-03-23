@@ -1,5 +1,0 @@
-target/
-dbt_packages/
-logs/
-tmp/materialized/*.csv
-.DS_Store
