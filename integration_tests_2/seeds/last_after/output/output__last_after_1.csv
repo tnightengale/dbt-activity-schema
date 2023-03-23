@@ -1,0 +1,3 @@
+activity_id,entity_uuid,ts,revenue_impact,last_after_visit_page_activity_id,last_after_visit_page_entity_uuid,last_after_visit_page_ts,last_after_visit_page_revenue_impact
+3,1,2022-01-02 22:10:11,0,7,1,2022-01-06 22:10:11,0
+9,7,2022-01-08 22:10:11,0,13,7,2022-01-12 22:10:11,0

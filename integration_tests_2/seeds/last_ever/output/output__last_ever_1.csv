@@ -1,0 +1,10 @@
+activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,last_ever_bought_something_feature_json,last_ever_bought_something_ts
+29,1,2022-01-28 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-01-30 22:10:11
+32,4,2022-01-31 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-02 22:10:11
+35,7,2022-02-03 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-05 22:10:11
+38,10,2022-02-06 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-08 22:10:11
+41,13,2022-02-09 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-11 22:10:11
+44,16,2022-02-12 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-14 22:10:11
+47,19,2022-02-15 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-17 22:10:11
+50,22,2022-02-18 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-20 22:10:11
+53,25,2022-02-21 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""bought something"""": 1}]",2022-02-23 22:10:11
