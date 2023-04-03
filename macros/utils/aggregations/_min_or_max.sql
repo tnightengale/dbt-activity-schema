@@ -2,20 +2,20 @@
 
 {% set aggregation = "min" if min_or_max == "min" else "max" %}
 {% set column_name = qualified_col.split(".")[-1].strip() %}
-
 {% set qualified_ts_col = "{}.{}".format(dbt_activity_schema.appended(), dbt_activity_schema.columns().ts )%}
+{% set columns = dbt_activity_schema.columns() %}
 
 
 {# Set type to cast back to after aggregation. #}
 {# TODO: Refactor column abstraction to contain types. #}
 {% if column_name in [
-    "ts",
-    "activity_repeated_at"
+    columns.ts,
+    columns.activity_repeated_at
 ] %}
     {% set type = dbt.type_timestamp() %}
 {% elif column_name in [
-    "activity_occurrence",
-    "revenue_impact"
+    columns.activity_occurrence,
+    columns.revenue_impact
 ] %}
     {% set type = dbt.type_numeric() %}
 {% else %}
