@@ -6,7 +6,7 @@
             dbt_activity_schema.activity(
                 dbt_activity_schema.first_ever(),
                 "signed up",
-                ["feature_json", "ts"]
+                ["feature_json", "ts", "signed_up"]
             )
         ]
     )

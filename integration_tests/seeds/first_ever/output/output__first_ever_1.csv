@@ -1,19 +1,19 @@
-﻿activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,first_ever_signed_up_feature_json,first_ever_signed_up_ts
-2,1,2022-01-01 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-01-28 22:10:11,"[{""""signed up"""": 1}]",2022-01-02 22:10:11
-5,4,2022-01-04 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-01-31 22:10:11,"[{""""signed up"""": 1}]",2022-01-05 22:10:11
-8,7,2022-01-07 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-03 22:10:11,"[{""""signed up"""": 1}]",2022-01-08 22:10:11
-11,10,2022-01-10 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-06 22:10:11,"[{""""signed up"""": 1}]",2022-01-11 22:10:11
-14,13,2022-01-13 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-09 22:10:11,"[{""""signed up"""": 1}]",2022-01-14 22:10:11
-17,16,2022-01-16 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-12 22:10:11,"[{""""signed up"""": 1}]",2022-01-17 22:10:11
-20,19,2022-01-19 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-15 22:10:11,"[{""""signed up"""": 1}]",2022-01-20 22:10:11
-23,22,2022-01-22 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-18 22:10:11,"[{""""signed up"""": 1}]",2022-01-23 22:10:11
-26,25,2022-01-25 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,1,2022-02-21 22:10:11,"[{""""signed up"""": 1}]",2022-01-26 22:10:11
-29,1,2022-01-28 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-02 22:10:11
-32,4,2022-01-31 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-05 22:10:11
-35,7,2022-02-03 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-08 22:10:11
-38,10,2022-02-06 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-11 22:10:11
-41,13,2022-02-09 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-14 22:10:11
-44,16,2022-02-12 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-17 22:10:11
-47,19,2022-02-15 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-20 22:10:11
-50,22,2022-02-18 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-23 22:10:11
-53,25,2022-02-21 22:10:11,visited page,,"[{""""visited page"""": 1}]",0,,2,,"[{""""signed up"""": 1}]",2022-01-26 22:10:11
+﻿activity_id,entity_uuid,ts,activity,anonymous_entity_uuid,feature_json,revenue_impact,link,activity_occurrence,activity_repeated_at,first_ever_signed_up_feature_json,first_ever_signed_up_ts,first_ever_signed_up_signed_up
+2,1,2022-01-01 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-01-28 22:10:11,{"signed_up": 1},2022-01-02 22:10:11,1
+5,4,2022-01-04 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-01-31 22:10:11,{"signed_up": 1},2022-01-05 22:10:11,1
+8,7,2022-01-07 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-03 22:10:11,{"signed_up": 1},2022-01-08 22:10:11,1
+11,10,2022-01-10 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-06 22:10:11,{"signed_up": 1},2022-01-11 22:10:11,1
+14,13,2022-01-13 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-09 22:10:11,{"signed_up": 1},2022-01-14 22:10:11,1
+17,16,2022-01-16 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-12 22:10:11,{"signed_up": 1},2022-01-17 22:10:11,1
+20,19,2022-01-19 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-15 22:10:11,{"signed_up": 1},2022-01-20 22:10:11,1
+23,22,2022-01-22 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-18 22:10:11,{"signed_up": 1},2022-01-23 22:10:11,1
+26,25,2022-01-25 22:10:11,visited page,,{"visited_page": 1},0,,1,2022-02-21 22:10:11,{"signed_up": 1},2022-01-26 22:10:11,1
+29,1,2022-01-28 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-02 22:10:11,1
+32,4,2022-01-31 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-05 22:10:11,1
+35,7,2022-02-03 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-08 22:10:11,1
+38,10,2022-02-06 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-11 22:10:11,1
+41,13,2022-02-09 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-14 22:10:11,1
+44,16,2022-02-12 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-17 22:10:11,1
+47,19,2022-02-15 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-20 22:10:11,1
+50,22,2022-02-18 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-23 22:10:11,1
+53,25,2022-02-21 22:10:11,visited page,,{"visited_page": 1},0,,2,,{"signed_up": 1},2022-01-26 22:10:11,1
