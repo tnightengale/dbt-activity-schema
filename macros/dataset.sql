@@ -62,8 +62,13 @@ filter_activity_stream_using_primary_activity as (
         {% endfor %}
 
         {% for col in activity.included_columns %}
+            {%- if col not in columns.values() -%}
+                {%- set parsed_col = dbt_activity_schema.json_unpack_key(appended() ~ '.' ~ columns.feature_json, col) -%}
+            {%- else -%}
+                {%- set parsed_col = appended() ~ '.' ~ col -%}
+            {%- endif -%}
             {% call activity.relationship.aggregation_func() %}
-            {{ appended() }}.{{ col }}
+            {{ parsed_col }}
             {% endcall %} as {{ dbt_activity_schema.alias_appended_activity(activity, col) }}
             {% if not loop.last %},{% endif %}
         {% endfor %}
