@@ -21,3 +21,17 @@ json_extract_path_text({{ json_col }}, {{dbt.string_literal(key) }})
 {% endif %}
 
 {%- endmacro %}
+
+{% macro bigquery__json_unpack_key(json_col, key) -%}
+
+{% if caller %}
+
+json_extract({{ caller }})
+
+{% else %}
+
+json_extract({{ json_col }}, {{dbt.string_literal("$."~key) }})
+
+{% endif %}
+
+{%- endmacro %}
