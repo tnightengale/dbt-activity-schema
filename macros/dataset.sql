@@ -42,7 +42,7 @@ with
 filter_activity_stream_using_primary_activity as (
     select
         {% for col in primary_activity.included_columns + primary_activity.required_columns %}
-        {{ primary() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
+        {{ dbt_activity_schema.parse_column(primary(), col) }} as {{ col }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 
     from {{ activity_stream }} as {{ primary() }}
@@ -62,8 +62,9 @@ filter_activity_stream_using_primary_activity as (
         {% endfor %}
 
         {% for col in activity.included_columns %}
+            {%- set parsed_col = dbt_activity_schema.parse_column(appended(), col) -%}
             {% call activity.relationship.aggregation_func() %}
-            {{ appended() }}.{{ col }}
+            {{ parsed_col }}
             {% endcall %} as {{ dbt_activity_schema.alias_appended_activity(activity, col) }}
             {% if not loop.last %},{% endif %}
         {% endfor %}

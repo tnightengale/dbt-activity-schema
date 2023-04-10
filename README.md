@@ -214,7 +214,10 @@ dataset.
 - **`included_columns (optional)`** : List [ str ]
 
   List of columns to include for the activity. Setting this overrides the
-  defaults configured by the `default_dataset_columns` project var.
+  defaults configured by the `default_dataset_columns` project var. If a column
+  specified is not identified as any of the columns (or their project-specific
+  aliases) from the Activity Schema spec, the column is assumed to be contained in
+  the corresponding activity's `feature_json` and will be extracted.
 
 - **`additional_join_condition (optional)`** : str
 
