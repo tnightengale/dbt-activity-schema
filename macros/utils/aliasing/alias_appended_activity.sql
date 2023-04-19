@@ -17,8 +17,15 @@ params:
         The name of the column that will be aliased.
 #}
 
+{% set name = activity.relationship.name %}
+{% if activity.relationship.name == 'nth_ever' %}
+    {% set name -%}
+    {{ name }}_{{ activity.relationship.nth_occurance }}
+    {%- endset %}
+{% endif %}
+
 {% set concatenated_activity_alias %}
-{{ activity.relationship.name -}}_{{- activity.name | replace(" ", "_") -}}_{{- column_name -}}
+{{ name -}}_{{- activity.name | replace(" ", "_") -}}_{{- column_name -}}
 {% endset %}
 
 {% do return(concatenated_activity_alias) %}

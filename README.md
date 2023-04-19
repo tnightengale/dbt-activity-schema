@@ -63,7 +63,7 @@ Include in `packages.yml`:
 ```yaml
 packages:
   - package: tnightengale/dbt_activity_schema
-    version: 0.4.0
+    version: 0.4.1
 ```
 For latest release, see
 https://github.com/tnightengale/dbt-activity-schema/releases.

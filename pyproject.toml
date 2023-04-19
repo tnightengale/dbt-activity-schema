@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "dbt-activity-schema"
-version = "0.4.0"
+version = "0.4.1"
 description = "A dbt package to create models within the Activity Schema data model framework."
 authors = ["Teghan Nightengale <tnightengale@gmail.com>", "Bryce Codell <bryce.codell@24analytics.co>"]
 license = "GNU"
