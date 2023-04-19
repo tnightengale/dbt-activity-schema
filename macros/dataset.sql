@@ -57,7 +57,7 @@ filter_activity_stream_using_primary_activity as (
     select
 
         -- Primary Activity Columns
-        {% for col in primary_activity.included_columns %}
+        {% for col in primary_activity.included_columns + primary_activity.required_columns %}
         {{ primary() }}.{{- col }},
         {% endfor %}
 
@@ -94,7 +94,7 @@ filter_activity_stream_using_primary_activity as (
         )
 
     group by
-        {% for col in primary_activity.included_columns %}
+        {% for col in primary_activity.included_columns + primary_activity.required_columns %}
         {{ primary() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
 ),
