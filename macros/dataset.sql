@@ -56,6 +56,7 @@ filter_activity_stream_using_primary_activity as (
 {{ alias_cte(activity, i) }} as (
     select
 
+{% if activity.relationship.name != "aggregate_all_ever" %}
         -- Primary Activity Columns
         {% for col in primary_activity.included_columns + primary_activity.required_columns %}
         {{ primary() }}.{{- col }},
@@ -97,6 +98,21 @@ filter_activity_stream_using_primary_activity as (
         {% for col in primary_activity.included_columns + primary_activity.required_columns %}
         {{ primary() }}.{{ col }}{%- if not loop.last -%},{%- endif %}
         {% endfor %}
+
+{% else %}
+-- special case for aggregate_all_ever relationship to avoid exploding join
+        {{ columns.customer }},
+        {% for col in activity.included_columns %}
+            {%- set parsed_col = dbt_activity_schema.parse_column(appended(), col) -%}
+            {% call activity.relationship.aggregation_func() %}
+            {{ parsed_col }}
+            {% endcall %} as {{ dbt_activity_schema.alias_appended_activity(activity, col) }}
+            {% if not loop.last %},{% endif %}
+        {% endfor %}
+    from {{ activity_stream }} as {{ appended() }}
+    where {{ appended() }}.{{ columns.activity }} = {{ dbt.string_literal(activity.name) }}
+    group by {{ columns.customer }}
+{% endif %}
 ),
 
 {% endfor %}
@@ -119,7 +135,11 @@ rejoin_aggregated_activities as (
     {% for activity in appended_activities %}{% set i = loop.index %}
 
     left join {{ alias_cte(activity, i) }}
+        {% if activity.relationship.name != "aggregate_all_ever" %}
         on {{ alias_cte(activity, i) }}.{{ columns.activity_id }} = {{ primary() }}.{{ columns.activity_id }}
+        {% else %}
+        on {{ alias_cte(activity, i) }}.{{ columns.customer }} = {{ primary() }}.{{ columns.customer }}
+        {% endif %}
 
     {% endfor %}
 )
