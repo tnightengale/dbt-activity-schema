@@ -267,6 +267,13 @@ dataset.
   `feature_json` of the appended activity, in addition to the relationship join
   conditions.
 
+  > ⚠️ **_WARNING:_**  The use of `{{ primary() }}` in the `additional_join_condition` argument
+  will break the dataset for activities using the `aggregate_all_ever` relationship. For
+  performance reasons, `aggregate_all_ever` activities do not join back to the primary
+  activity when deriving aggregations, so no table in the corresponding CTE uses the alias
+  produced by the `{{ primary() }}` macro.
+
+
 ## Relationships
 In the Activity Schema framework,
 [relationships](https://github.com/ActivitySchema/ActivitySchema/blob/main/2.0.md#relationships)
