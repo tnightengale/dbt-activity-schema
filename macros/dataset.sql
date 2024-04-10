@@ -88,7 +88,7 @@ dataset as (
             )
             {# Additional Join Condition relies on primary and appended subquery/CTE names #}
             {% if activity.additional_join_condition is string %}
-            and ( {{ activity.additional_join_condition(primary=primary(), appended=appended) }} )
+            and ( {{ activity.additional_join_condition }} )
             {% else %}
             and ( {{ activity.additional_join_condition(primary(), appended) }} )
             {% endif %}
