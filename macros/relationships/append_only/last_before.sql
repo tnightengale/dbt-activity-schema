@@ -1,11 +1,8 @@
-{% macro last_before_join_clause(i) %}
-
-{% set primary = dbt_activity_schema.primary %}
+{% macro last_before_join_clause(i, primary, appended) %}
 {% set columns = dbt_activity_schema.columns() %}
-{% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ appended() }}.{{- columns.ts }} <= coalesce({{ primary() }}.{{- columns.ts }}, '1900-01-01'::timestamp)
+    {{ appended }}.{{- columns.ts }} <= coalesce({{ primary }}.{{- columns.ts }}, '1900-01-01'::timestamp)
 )
 {% endmacro %}
 

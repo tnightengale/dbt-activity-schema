@@ -1,14 +1,11 @@
-{% macro aggregate_in_between_join_clause(i) %}
-
-{% set primary = dbt_activity_schema.primary %}
+{% macro aggregate_in_between_join_clause(i, primary, appended) %}
 {% set columns = dbt_activity_schema.columns() %}
-{% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ appended() }}.{{- columns.ts }} > {{ primary() }}.{{- columns.ts }}
+    {{ appended }}.{{- columns.ts }} > {{ primary }}.{{- columns.ts }}
     and (
-        {{ appended() }}.{{- columns.ts }} <= {{ primary() }}.{{- columns.activity_repeated_at }}
-        or {{ primary() }}.{{- columns.activity_repeated_at }} is null
+        {{ appended }}.{{- columns.ts }} <= {{ primary }}.{{- columns.activity_repeated_at }}
+        or {{ primary }}.{{- columns.activity_repeated_at }} is null
     )
 )
 {% endmacro %}

@@ -1,11 +1,8 @@
-{% macro first_after_join_clause(i) %}
-
-{% set primary = dbt_activity_schema.primary %}
+{% macro first_after_join_clause(i, primary, appended) %}
 {% set columns = dbt_activity_schema.columns() %}
-{% set appended = dbt_activity_schema.appended %}
 
 (
-    {{ appended() }}.{{- columns.ts }} > {{ primary() }}.{{- columns.ts }}
+    {{ appended }}.{{- columns.ts }} > {{ primary }}.{{- columns.ts }}
 )
 {% endmacro %}
 
