@@ -13,7 +13,7 @@
 			"extensions": [
 				"stkb.rewrap",
 				"yzhang.markdown-all-in-one",
-				"innoverio.vscode-dbt-power-user",
+				"innoverio.vscode-dbt-power-user@0.13.0",
 				"streetsidesoftware.code-spell-checker"
 			],
 			"settings": {
