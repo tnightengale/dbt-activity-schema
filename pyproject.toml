@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "dbt-activity-schema"
 version = "0.4.1"
+package-mode = false
 description = "A dbt package to create models within the Activity Schema data model framework."
 authors = ["Teghan Nightengale <tnightengale@gmail.com>", "Bryce Codell <bryce.codell@24analytics.co>"]
 license = "GNU"
@@ -8,9 +9,8 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-dbt-core = "1.3.3"
-duckdb = "0.6.1"
-dbt-duckdb = "^1.3.0"
+dbt-core = "^1.7.0"
+dbt-duckdb = "^1.7.3"
 
 [build-system]
 requires = ["poetry-core"]
